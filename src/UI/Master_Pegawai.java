@@ -1,6 +1,7 @@
 package UI;
 
 import Java.*;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class Master_Pegawai extends javax.swing.JDialog {
     private ArrayList<ListPegawai> list;
     private ListPegawai listPegawai;
     private TableModel model;
+    private PreparedStatement PS;
 
     public Master_Pegawai() {
         initComponents();
@@ -27,19 +29,24 @@ public class Master_Pegawai extends javax.swing.JDialog {
 //        prep
         this.connection = connection;
 //
-        tampilTabel();
+        tampilTabel("*");
     }
 
-    private String tampilTabel() {
+    private String tampilTabel(String param) {
         String data = "";
         try {
-            data = "SELECT kode_pegawai, kode_unik, nama_lokasi, nama_pegawai, alamat_pegawai, kota_pegawai, telepon_pegawai,contact_pegawai, status_pegawai FROM pegawai,lokasi WHERE pegawai.kode_lokasi=lokasi.kode_lokasi order by kode_pegawai";
+            data = "SELECT kode_pegawai, kode_unik, nama_lokasi, nama_pegawai, alamat_pegawai, kota_pegawai, telepon_pegawai,contact_pegawai, status_pegawai "
+                    + "FROM pegawai, lokasi "
+                    + "WHERE " + (param.equalsIgnoreCase("*") ? "" : "nama_pegawai like '%" + param + "%' and ") + "pegawai.kode_lokasi=lokasi.kode_lokasi "
+                    + "order by kode_pegawai";
             hasil = connection.ambilData(data);
-            System.out.println("sukses query tampil tabel");
+//            System.out.println("sukses query tampil tabel");
             setModel(hasil);
 
         } catch (Exception e) {
-            System.out.println("Error tampil tabel");
+            System.out.println("ERROR -> " + e.getMessage());
+        } finally {
+//            System.out.println(data);
         }
         return data;
     }
@@ -68,9 +75,70 @@ public class Master_Pegawai extends javax.swing.JDialog {
         }
     }
 
+    private int getNewId() {
+        String sql = "SELECT kode_pegawai FROM pegawai ORDER BY kode_pegawai DESC LIMIT 1";
+        int id = 0;
+        try {
+            hasil = connection.ambilData(sql);
+            while (hasil.next()) {
+                id = hasil.getInt("kode_pegawai") + 1;
+            }
+        } catch (SQLException e) {
+        }
+//        System.out.println("this id -> " + id);
+        return id;
+    }
+
+    private void insertData(ListPegawai listPegawai) {
+        PS = null;
+        if (listPegawai.getKode_pegawai() != 0) {
+            try {
+                String sql = "insert into pegawai values (?,?,?,?,?,?,?,?,?,?,?,?)";
+                PS = connection.Connect().prepareStatement(sql);
+                PS.setInt(1, listPegawai.getKode_pegawai());
+                PS.setInt(2, listPegawai.getKode_unik());
+                PS.setString(3, listPegawai.getKode_lokasi());
+                PS.setInt(4, 0);
+                PS.setString(5, listPegawai.getNama_pegawai());
+                PS.setString(6, listPegawai.getAlamat_pegawai());
+                PS.setString(7, listPegawai.getKota_pegawai());
+                PS.setString(8, listPegawai.getTelepon_pegawai());
+                PS.setString(9, listPegawai.getContact_pegawai());
+                PS.setInt(10, listPegawai.getStatus_pegawai());
+                PS.setString(11, "");
+                PS.setString(12, "");
+                PS.executeUpdate();
+
+                tampilTabel("*");
+            } catch (SQLException e) {
+                System.out.println("Master_Pegawai_Line_86_" + e.toString());
+            }
+        }
+    }
+
     private void updateData(int kodePegawai) {
-        String sql = "Update pegawai set kode_unik=?,nama_pegawai=?,kode_lokasi=?,alamat_pegawai=?,kota_pegawai=?,telepon_pegawai=?,contact_pegawai=?,status_pegawai=? where kode_pegawai=?";
-        connection.simpanData(sql);
+        PS = null;
+        try {
+            String sql = "Update pegawai set kode_unik=?,nama_pegawai=?,kode_lokasi=?,alamat_pegawai=?,kota_pegawai=?, "
+                    + "telepon_pegawai=?,contact_pegawai=?,status_pegawai=? "
+                    + "where kode_pegawai=? ";
+            PS = connection.Connect().prepareStatement(sql);
+            PS.setInt(1, listPegawai.getKode_unik());
+            PS.setString(2, listPegawai.getNama_pegawai());
+            PS.setString(3, listPegawai.getKode_lokasi());
+            PS.setString(4, listPegawai.getAlamat_pegawai());
+            PS.setString(5, listPegawai.getKota_pegawai());
+            PS.setString(6, listPegawai.getTelepon_pegawai());
+            PS.setString(7, listPegawai.getContact_pegawai());
+            PS.setInt(8, listPegawai.getStatus_pegawai());
+            PS.setInt(9, listPegawai.getKode_pegawai());
+            PS.executeUpdate();
+
+//            setModel(null);
+//            connection.simpanData(sql);
+        } catch (SQLException e) {
+            System.out.println("Master_Pegawai_Line_111_" + e.toString());
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -133,6 +201,12 @@ public class Master_Pegawai extends javax.swing.JDialog {
         });
 
         jLabel1.setText("Kriteria");
+
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextField1KeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -223,6 +297,11 @@ public class Master_Pegawai extends javax.swing.JDialog {
 
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Gambar/cancel (3).png"))); // NOI18N
         jLabel7.setText("Esc-Exit");
+        jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel7MouseClicked(evt);
+            }
+        });
 
         jSeparator10.setForeground(new java.awt.Color(153, 153, 153));
         jSeparator10.setOrientation(javax.swing.SwingConstants.VERTICAL);
@@ -290,9 +369,12 @@ public class Master_Pegawai extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
-        Master_Pegawai_TambahPegawai tp = new Master_Pegawai_TambahPegawai();
+        listPegawai = new ListPegawai();
+        Master_Pegawai_TambahPegawai tp = new Master_Pegawai_TambahPegawai(new Awal(rootPaneCheckingEnabled), rootPaneCheckingEnabled, listPegawai, getNewId());
+        tp.setLocationRelativeTo(this);
         tp.setVisible(true);
-        tp.setLocationRelativeTo(null);
+        insertData(listPegawai);
+
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
@@ -307,6 +389,7 @@ public class Master_Pegawai extends javax.swing.JDialog {
                 updateData(listPegawai.getKode_unik());
 //                System.out.println(list.get(0).getNama_pegawai());
             } catch (Exception e) {
+                System.out.println("Master_Pegawai_Line_360_" + e.toString());
             }
         }
 
@@ -334,6 +417,14 @@ public class Master_Pegawai extends javax.swing.JDialog {
     private void jTable6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable6MouseClicked
         this.listPegawai = list.get(jTable6.getSelectedRow());
     }//GEN-LAST:event_jTable6MouseClicked
+
+    private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
+        this.dispose();
+    }//GEN-LAST:event_jLabel7MouseClicked
+
+    private void jTextField1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyTyped
+        tampilTabel(jTextField1.getText());
+    }//GEN-LAST:event_jTextField1KeyTyped
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

@@ -9,6 +9,7 @@ public class Master_Pegawai_TambahPegawai extends javax.swing.JDialog {
 
 //    var
     private boolean isEdit = false;
+    private int id;
 
     public Master_Pegawai_TambahPegawai() {//dont use this
         initComponents();
@@ -17,11 +18,19 @@ public class Master_Pegawai_TambahPegawai extends javax.swing.JDialog {
     public Master_Pegawai_TambahPegawai(java.awt.Frame parent, boolean modal, ListPegawai listpegawai, boolean isEdit) {
         super(parent, modal);
         initComponents();
-
 //        code here
         this.isEdit = isEdit;
         this.listpegawai = listpegawai;
         setContent();
+//        System.out.println(active.isSelected()? 1 : 0);
+    }
+
+    public Master_Pegawai_TambahPegawai(java.awt.Frame parent, boolean modal, ListPegawai listpegawai, int id) {
+        super(parent, modal);
+        initComponents();
+//        code here
+        this.id = id;
+        this.listpegawai = listpegawai;
     }
 
     private void setContent() {
@@ -310,10 +319,17 @@ public class Master_Pegawai_TambahPegawai extends javax.swing.JDialog {
     }//GEN-LAST:event_jLabel19MouseClicked
 
     private void jLabel18MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel18MouseClicked
-        if (isEdit) {
-            listpegawai.setNama_pegawai(jTextField7.getText());
-        } else {
+        if (!isEdit) {
+            listpegawai.setKode_pegawai(this.id);
         }
+        listpegawai.setKode_unik(Integer.parseInt(jTextField6.getText()));
+        listpegawai.setNama_pegawai(jTextField7.getText());
+        listpegawai.setKode_lokasi(jTextField8.getText());
+        listpegawai.setAlamat_pegawai(jTextField9.getText());
+        listpegawai.setKota_pegawai(jTextField10.getText());
+        listpegawai.setTelepon_pegawai(jTextField11.getText());
+        listpegawai.setContact_pegawai(jTextField12.getText());
+        listpegawai.setStatus_pegawai(active.isSelected() ? 0 : 1);
         this.dispose();
     }//GEN-LAST:event_jLabel18MouseClicked
 
