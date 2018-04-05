@@ -27,7 +27,7 @@ public class Master_Salesman extends javax.swing.JFrame {
         tabel = new DefaultTableModel(new String[]{"No", "Nama", "Contact", "Telepon", "Alamat", "Kota"}, 0);
         jTable9.setModel(tabel);
         jTable9.getColumnModel().getColumn(0).setPreferredWidth(5);
-        tampilTabel(0);
+        tampilTabel(1);
     }
     
     public String tampilTabel(int aktif){
@@ -133,6 +133,15 @@ public class Master_Salesman extends javax.swing.JFrame {
 
         jComboBox7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jComboBox7.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Aktif ", "Tidak Aktif ", "Semua" }));
+        jComboBox7.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                jComboBox7PopupMenuWillBecomeInvisible(evt);
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+        });
 
         jButton29.setBackground(new java.awt.Color(71, 166, 227));
         jButton29.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -285,6 +294,11 @@ public class Master_Salesman extends javax.swing.JFrame {
         Master_Login log=new Master_Login();
         log.setVisible(true);
     }//GEN-LAST:event_jButton34ActionPerformed
+
+    private void jComboBox7PopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_jComboBox7PopupMenuWillBecomeInvisible
+        String dd = jComboBox7.getSelectedItem().toString();
+        
+    }//GEN-LAST:event_jComboBox7PopupMenuWillBecomeInvisible
 
     /**
      * @param args the command line arguments
