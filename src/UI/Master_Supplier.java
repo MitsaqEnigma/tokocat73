@@ -1,22 +1,77 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package UI;
 
-/**
- *
- * @author User
- */
+import Java.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.table.TableModel;
+
 public class Master_Supplier extends javax.swing.JFrame {
 
-    /**
-     * Creates new form NewJFrame
-     */
+    private ResultSet hasil1;
+    private Connect connection;
+    private ArrayList<ListSupplier> list;
+    private ListSupplier listSupplier;
+    private TableModel model;
+    private String comboBox;
+
     public Master_Supplier() {
         initComponents();
         this.setLocationRelativeTo(null);
+        connection = new Connect();
+        tampilTabelTidak_Aktif(1);
+    }
+
+    private String tampilTabelAll() {
+        String datax = "";
+        try {
+            datax = "SELECT kode_supplier, nama_supplier,alamat_supplier, telepon_supplier, contact_supplier from supplier";
+            hasil1 = connection.ambilData(datax);
+            setModel(hasil1);
+        } catch (Exception e) {
+            System.out.println("Error tampil tabel");
+        }
+        return datax;
+    }
+
+    private String tampilTabelTidak_Aktif(int id) {
+        String datax = "";
+        try {
+            datax = "SELECT kode_supplier, nama_supplier,alamat_supplier, telepon_supplier, contact_supplier from supplier where aktif_supplier='"+id+"'";
+            hasil1 = connection.ambilData(datax);
+            setModel(hasil1);
+        } catch (Exception e) {
+            System.out.println("Error tampil tabel");
+        }
+        return datax;
+    }
+    
+    private void updateData(int kodeSupplier) {
+        String sql = "Update supplier set kode_unik=?,nama_pegawai=?,kode_lokasi=?,alamat_pegawai=?,kota_pegawai=?,telepon_pegawai=?,contact_pegawai=?,status_pegawai=? where kode_Supplier='"+kodeSupplier+"'";
+        connection.simpanData(sql);
+    }
+
+    private void setModel(ResultSet hasil) {
+        try {
+            list = new ArrayList<>();
+            while (hasil.next()) {
+                this.listSupplier = new ListSupplier();
+                this.listSupplier.setKode_supplier(hasil.getInt("kode_supplier"));
+                this.listSupplier.setNama_supplier(hasil.getString("nama_supplier"));
+                this.listSupplier.setContact_supplier(hasil.getString("contact_supplier"));
+                this.listSupplier.setTelepon_supplier(hasil.getString("telepon_supplier"));
+                this.listSupplier.setAlamat_supplier(hasil.getString("alamat_supplier"));
+                list.add(listSupplier);
+                listSupplier = null;
+            }
+            model = new modelTabelSupplier(list);
+            jTable2.setModel(model);
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
     }
 
     /**
@@ -41,7 +96,7 @@ public class Master_Supplier extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator4 = new javax.swing.JSeparator();
-        jComboBox4 = new javax.swing.JComboBox<String>();
+        jComboBox4 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -159,7 +214,12 @@ public class Master_Supplier extends javax.swing.JFrame {
 
         jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "LIST SUPPLIER ACTIVE", "LIST SUPPLIER DEACTIVE", "ALL" }));
+        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "LIST SUPPLIER ACTIVE", "LIST SUPPLIER DEACTIVE", "ALL" }));
+        jComboBox4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -224,28 +284,48 @@ public class Master_Supplier extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel20MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel20MouseClicked
-        Master_Supplier_TambahEdit ste=new Master_Supplier_TambahEdit();
+        Master_Supplier_TambahEdit ste = new Master_Supplier_TambahEdit();
         ste.setVisible(true);
         ste.setFocusable(true);
     }//GEN-LAST:event_jLabel20MouseClicked
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
-       Master_Supplier_KartuHutang kh=new Master_Supplier_KartuHutang();
-       kh.setVisible(true);
-       kh.setFocusable(true);
+        Master_Supplier_KartuHutang kh = new Master_Supplier_KartuHutang();
+        kh.setVisible(true);
+        kh.setFocusable(true);
     }//GEN-LAST:event_jTable2MouseClicked
 
     private void jLabel21MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel21MouseClicked
-       Master_Supplier_TambahEdit ste=new Master_Supplier_TambahEdit();
-        ste.setVisible(true);
-        ste.setFocusable(true);
+        if (jTable2.getSelectedRow() < 0) {
+            JOptionPane.showMessageDialog(null, "Pilih Supplier yang akan diedit");
+        } else {
+            try {
+                Master_Supplier_TambahEdit tp = new Master_Supplier_TambahEdit(new Awal(rootPaneCheckingEnabled), rootPaneCheckingEnabled, listSupplier, true);
+                tp.setLocationRelativeTo(this);
+                tp.setVisible(true);
+                updateData(listSupplier.getKode_supplier());
+//                System.out.println(list.get(0).getNama_pegawai());
+            } catch (Exception e) {
+            }
+        }
     }//GEN-LAST:event_jLabel21MouseClicked
+
+    private void jComboBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox4ActionPerformed
+        comboBox = jComboBox4.getSelectedItem().toString();
+        if (jComboBox4.getSelectedIndex() == 0) {
+            tampilTabelTidak_Aktif(1);
+        } else if (jComboBox4.getSelectedIndex() == 1) {
+            tampilTabelTidak_Aktif(0);
+        } else {
+            tampilTabelAll();
+        }
+    }//GEN-LAST:event_jComboBox4ActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-                /* Set the Nimbus look and feel */
+        /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 

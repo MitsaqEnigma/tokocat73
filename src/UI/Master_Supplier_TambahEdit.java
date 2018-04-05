@@ -1,22 +1,39 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package UI;
+
+import Java.ListSupplier;
 
 /**
  *
  * @author User
  */
 public class Master_Supplier_TambahEdit extends javax.swing.JFrame {
-
+private ListSupplier listSupplier;
+private boolean isEdit = false;
     /**
      * Creates new form NewJFrame
      */
     public Master_Supplier_TambahEdit() {
         initComponents();
         this.setLocationRelativeTo(null);
+    }
+
+    Master_Supplier_TambahEdit(Awal awal, boolean rootPaneCheckingEnabled, ListSupplier listSupplier, boolean isEdit) {
+        this.isEdit = isEdit;
+        this.listSupplier = listSupplier;
+        setContent();
+    }
+    
+    private void setContent() {
+        jTextField30.setText(String.valueOf(listSupplier.getKode_supplier()));
+        jTextField8.setText(listSupplier.getNama_supplier());
+        jTextField33.setText(listSupplier.getAlamat_supplier());
+        jTextField9.setText(listSupplier.getTelepon_supplier());
+        jTextField10.setText(listSupplier.getContact_supplier());
+        if (listSupplier.getStatus()== 0) {
+            aktif.setSelected(true);
+        } else {
+            nonAktif.setSelected(true);
+        }
     }
 
     /**
@@ -54,8 +71,8 @@ public class Master_Supplier_TambahEdit extends javax.swing.JFrame {
         jTextField11 = new javax.swing.JTextField();
         jTextField13 = new javax.swing.JTextField();
         jTextField38 = new javax.swing.JTextField();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
+        aktif = new javax.swing.JRadioButton();
+        nonAktif = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -171,15 +188,15 @@ public class Master_Supplier_TambahEdit extends javax.swing.JFrame {
             }
         });
 
-        jRadioButton3.setBackground(new java.awt.Color(255, 153, 0));
-        jRadioButton3.setSelected(true);
-        jRadioButton3.setText("ACTIVE");
+        aktif.setBackground(new java.awt.Color(255, 153, 0));
+        aktif.setSelected(true);
+        aktif.setText("ACTIVE");
 
-        jRadioButton4.setBackground(new java.awt.Color(255, 153, 0));
-        jRadioButton4.setText("DEACTIVE");
-        jRadioButton4.addActionListener(new java.awt.event.ActionListener() {
+        nonAktif.setBackground(new java.awt.Color(255, 153, 0));
+        nonAktif.setText("DEACTIVE");
+        nonAktif.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton4ActionPerformed(evt);
+                nonAktifActionPerformed(evt);
             }
         });
 
@@ -231,9 +248,9 @@ public class Master_Supplier_TambahEdit extends javax.swing.JFrame {
                             .addComponent(jTextField8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextField30, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jRadioButton3)
+                                .addComponent(aktif)
                                 .addGap(10, 10, 10)
-                                .addComponent(jRadioButton4)))
+                                .addComponent(nonAktif)))
                         .addGap(70, 70, 70))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel68)
@@ -303,8 +320,8 @@ public class Master_Supplier_TambahEdit extends javax.swing.JFrame {
                     .addComponent(jLabel66))
                 .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton3)
-                    .addComponent(jRadioButton4))
+                    .addComponent(aktif)
+                    .addComponent(nonAktif))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -366,9 +383,9 @@ public class Master_Supplier_TambahEdit extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField38MouseClicked
 
-    private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
+    private void nonAktifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nonAktifActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton4ActionPerformed
+    }//GEN-LAST:event_nonAktifActionPerformed
 
     /**
      * @param args the command line arguments
@@ -533,6 +550,7 @@ public class Master_Supplier_TambahEdit extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JRadioButton aktif;
     private javax.swing.JLabel jLabel46;
     private javax.swing.JLabel jLabel50;
     private javax.swing.JLabel jLabel51;
@@ -546,8 +564,6 @@ public class Master_Supplier_TambahEdit extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel66;
     private javax.swing.JLabel jLabel68;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
@@ -561,5 +577,6 @@ public class Master_Supplier_TambahEdit extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField38;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
+    private javax.swing.JRadioButton nonAktif;
     // End of variables declaration//GEN-END:variables
 }
