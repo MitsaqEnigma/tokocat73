@@ -1,21 +1,77 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package UI;
 
-/**
- *
- * @author 7
- */
+import Java.Connect;
+import Java.ListPegawai;
+import Java.ListSalesman;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.TableModel;
+import javax.swing.table.DefaultTableModel;
+
 public class Master_Salesman extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Master_Salesman
-     */
+    private Connect connection;
+    private ArrayList<ListSalesman> list;
+    private ListSalesman listSalesman;
+    private DefaultTableModel tabel;
+    private ResultSet hasil;
+    
+//    private TableModel model;
+    
+    
     public Master_Salesman() {
         initComponents();
+        connection = new Connect();
+        tabel = new DefaultTableModel(new String[]{"No", "Nama", "Contact", "Telepon", "Alamat", "Kota"}, 0);
+        jTable9.setModel(tabel);
+        jTable9.getColumnModel().getColumn(0).setPreferredWidth(5);
+        tampilTabel(0);
+    }
+    
+    public String tampilTabel(int aktif){
+        String data = "";
+        try{
+            data = "SELECT nama_salesman, contact_salesman, telepon_salesman, alamat, kota_salesman FROM salesman WHERE aktif_sales = '"+aktif+"'";
+            hasil = connection.ambilData(data);
+            System.out.println("sukses query tampil tabel");
+            setModel(hasil);
+        } catch(Exception e){
+            System.out.println("Error Master Salesman - tampil tabel "+e);
+        }
+        
+        return data;
+    }
+    
+    public void setModel(ResultSet hasil){
+        try{
+            list = new ArrayList<>();
+            int no = 1;
+            while (hasil.next()) {
+                this.listSalesman = new ListSalesman();
+                this.listSalesman.setNo(no);
+                this.listSalesman.setNama_salesman(hasil.getString("nama_salesman"));
+                this.listSalesman.setContact_salesman(hasil.getString("contact_salesman"));
+                this.listSalesman.setTelepon_salesman(hasil.getString("telepon_salesman"));
+                this.listSalesman.setAlamat_salesman(hasil.getString("alamat"));
+                this.listSalesman.setKota_salesman(hasil.getString("kota_salesman"));
+//                list.add(listSalesman);
+                tabel.addRow(new Object[]{
+                    this.listSalesman.getNo(),
+                    this.listSalesman.getContact_salesman(),
+                    this.listSalesman.getTelepon_salesman(),
+                    this.listSalesman.getAlamat_salesman(),
+                    this.listSalesman.getKota_salesman()
+                });
+                no++;
+                listSalesman = null;                        
+            }
+            
+            
+        } catch(Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
     }
 
     /**
