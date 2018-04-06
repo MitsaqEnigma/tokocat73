@@ -1,6 +1,5 @@
 package UI;
 
-import javax.swing.JFrame;
 import Java.*;
 
 public class Awal extends javax.swing.JFrame {

@@ -1,6 +1,8 @@
 package UI;
 
 import Java.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -39,7 +41,7 @@ public class Master_Supplier extends javax.swing.JFrame {
     private String tampilTabelTidak_Aktif(int id) {
         String datax = "";
         try {
-            datax = "SELECT kode_supplier, nama_supplier,alamat_supplier, telepon_supplier, contact_supplier from supplier where aktif_supplier='"+id+"'";
+            datax = "SELECT kode_supplier, nama_supplier,alamat_supplier, telepon_supplier, contact_supplier from supplier where aktif_supplier='" + id + "'";
             hasil1 = connection.ambilData(datax);
             setModel(hasil1);
         } catch (Exception e) {
@@ -47,9 +49,9 @@ public class Master_Supplier extends javax.swing.JFrame {
         }
         return datax;
     }
-    
+
     private void updateData(int kodeSupplier) {
-        String sql = "Update supplier set kode_unik=?,nama_pegawai=?,kode_lokasi=?,alamat_pegawai=?,kota_pegawai=?,telepon_pegawai=?,contact_pegawai=?,status_pegawai=? where kode_Supplier='"+kodeSupplier+"'";
+        String sql = "Update supplier set kode_unik=?,nama_pegawai=?,kode_lokasi=?,alamat_pegawai=?,kota_pegawai=?,telepon_pegawai=?,contact_pegawai=?,status_pegawai=? where kode_Supplier='" + kodeSupplier + "'";
         connection.simpanData(sql);
     }
 
@@ -290,11 +292,24 @@ public class Master_Supplier extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel20MouseClicked
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
-        Master_Supplier_KartuHutang kh = new Master_Supplier_KartuHutang();
-        kh.setVisible(true);
-        kh.setFocusable(true);
+        jTable2.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                if (mouseEvent.getClickCount() == 2) {
+                    System.out.println("double click");
+//                    Master_Supplier_KartuHutang kh = new Master_Supplier_KartuHutang();
+//                    kh.setVisible(true);
+//                    kh.setFocusable(true);
+                    jTable2.clearSelection();
+                }
+            }
+        });
     }//GEN-LAST:event_jTable2MouseClicked
-
+    public void mouseClicked(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount() == 2) {
+            System.out.println("double click");
+        }
+    }
     private void jLabel21MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel21MouseClicked
         if (jTable2.getSelectedRow() < 0) {
             JOptionPane.showMessageDialog(null, "Pilih Supplier yang akan diedit");
