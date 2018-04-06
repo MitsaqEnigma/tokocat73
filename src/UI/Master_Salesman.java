@@ -17,7 +17,7 @@ public class Master_Salesman extends javax.swing.JFrame {
     private ListSalesman listSalesman;
     private DefaultTableModel tabel;
     private ResultSet hasil;
-    
+    int dd;
 //    private TableModel model;
     
     
@@ -27,9 +27,32 @@ public class Master_Salesman extends javax.swing.JFrame {
         tabel = new DefaultTableModel(new String[]{"No", "Nama", "Contact", "Telepon", "Alamat", "Kota"}, 0);
         jTable9.setModel(tabel);
         jTable9.getColumnModel().getColumn(0).setPreferredWidth(5);
-        tampilTabel(0);
+        dd = jComboBox7.getSelectedIndex();
+//        tampilTabel(1);
     }
     
+     private void deleteTabel(){
+        int baris = tabel.getRowCount();
+        for (int i = 0; i < baris; i++) {
+            tabel.removeRow(0);
+        }
+    }
+    
+//    public String tampilTabel1(int aktif){
+//        String data = "";
+//        try{
+//            data = "SELECT nama_salesman, contact_salesman, telepon_salesman, alamat, kota_salesman "
+//                    + "FROM salesman "
+//                    + "WHERE "+ (dd == 0 ? "aktif_sales = '"+aktif+"' " :(dd == 1) ) +";
+//            hasil = connection.ambilData(data);
+//            System.out.println("sukses query tampil tabel");
+//            setModel(hasil);
+//        } catch(Exception e){
+//            System.out.println("Error Master Salesman - tampil tabel "+e);
+//        }
+//        return data;
+//    }
+     
     public String tampilTabel(int aktif){
         String data = "";
         try{
@@ -40,7 +63,19 @@ public class Master_Salesman extends javax.swing.JFrame {
         } catch(Exception e){
             System.out.println("Error Master Salesman - tampil tabel "+e);
         }
-        
+        return data;
+    }
+    
+    public String tampilTabelSemua(){
+        String data = "";
+        try{
+            data = "SELECT nama_salesman, contact_salesman, telepon_salesman, alamat, kota_salesman FROM salesman";
+            hasil = connection.ambilData(data);
+            System.out.println("sukses query tampil tabel semua");
+            setModel(hasil);
+        } catch(Exception e){
+            System.out.println("Error Master Salesman - tampil tabel semua "+e);
+        }
         return data;
     }
     
@@ -67,8 +102,6 @@ public class Master_Salesman extends javax.swing.JFrame {
                 no++;
                 listSalesman = null;                        
             }
-            
-            
         } catch(Exception e){
             JOptionPane.showMessageDialog(null, e);
         }
@@ -133,6 +166,15 @@ public class Master_Salesman extends javax.swing.JFrame {
 
         jComboBox7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jComboBox7.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Aktif ", "Tidak Aktif ", "Semua" }));
+        jComboBox7.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                jComboBox7PopupMenuWillBecomeInvisible(evt);
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+        });
 
         jButton29.setBackground(new java.awt.Color(71, 166, 227));
         jButton29.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -153,6 +195,11 @@ public class Master_Salesman extends javax.swing.JFrame {
         });
 
         jTextField90.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cari", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
+        jTextField90.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextField90KeyTyped(evt);
+            }
+        });
 
         jLabel184.setText("Refresh");
 
@@ -285,6 +332,24 @@ public class Master_Salesman extends javax.swing.JFrame {
         Master_Login log=new Master_Login();
         log.setVisible(true);
     }//GEN-LAST:event_jButton34ActionPerformed
+
+    private void jComboBox7PopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_jComboBox7PopupMenuWillBecomeInvisible
+        dd = jComboBox7.getSelectedIndex();
+        if(dd == 0){
+            deleteTabel();
+            tampilTabel(1);
+        } else if(dd == 1){
+            deleteTabel();
+            tampilTabel(0);
+        } else if(dd == 2){
+            deleteTabel();
+            tampilTabelSemua();
+        }
+    }//GEN-LAST:event_jComboBox7PopupMenuWillBecomeInvisible
+
+    private void jTextField90KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField90KeyTyped
+        
+    }//GEN-LAST:event_jTextField90KeyTyped
 
     /**
      * @param args the command line arguments
