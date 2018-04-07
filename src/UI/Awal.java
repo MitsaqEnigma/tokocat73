@@ -912,15 +912,14 @@ public class Awal extends javax.swing.JFrame {
 
     private void SupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SupplierActionPerformed
       Master_Supplier sup=new Master_Supplier(this, rootPaneCheckingEnabled, connection);
+      sup.setLocationRelativeTo(this);
       sup.setVisible(true);
-      sup.setFocusable(true);
     }//GEN-LAST:event_SupplierActionPerformed
 
     private void SalesmanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalesmanActionPerformed
-        Master_Salesman sal=new Master_Salesman();
+        Master_Salesman sal=new Master_Salesman(this, rootPaneCheckingEnabled, connection);
+        sal.setLocationRelativeTo(this);
         sal.setVisible(true);
-        sal.setFocusable(true);
-       
     }//GEN-LAST:event_SalesmanActionPerformed
 
     private void CustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CustomerActionPerformed

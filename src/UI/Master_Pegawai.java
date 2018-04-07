@@ -85,7 +85,6 @@ public class Master_Pegawai extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
         }
-//        System.out.println("this id -> " + id);
         return id;
     }
 
@@ -379,7 +378,6 @@ public class Master_Pegawai extends javax.swing.JDialog {
         tp.setLocationRelativeTo(this);
         tp.setVisible(true);
         insertData(listPegawai);
-
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked

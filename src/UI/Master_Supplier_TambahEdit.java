@@ -28,6 +28,8 @@ public class Master_Supplier_TambahEdit extends javax.swing.JDialog {
         initComponents();
         this.id = id;
         this.listSupplier = listSupplier;
+//        
+        jTextField30.setText(String.valueOf(id));
     }
 
     private void setContent() {
@@ -117,6 +119,8 @@ public class Master_Supplier_TambahEdit extends javax.swing.JDialog {
         jLabel59.setText("Alamat");
 
         jTextField30.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.lightGray, java.awt.Color.gray, java.awt.Color.lightGray, java.awt.Color.lightGray));
+        jTextField30.setEnabled(false);
+        jTextField30.setFocusable(false);
         jTextField30.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTextField30MouseClicked(evt);
@@ -184,6 +188,7 @@ public class Master_Supplier_TambahEdit extends javax.swing.JDialog {
             }
         });
 
+        jTextField11.setText("0");
         jTextField11.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.lightGray, java.awt.Color.gray, java.awt.Color.lightGray, java.awt.Color.lightGray));
         jTextField11.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -411,19 +416,21 @@ public class Master_Supplier_TambahEdit extends javax.swing.JDialog {
     }//GEN-LAST:event_jLabel64MouseClicked
 
     private void jLabel68MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel68MouseClicked
-        if(!isEdit){
+        if (!isEdit) {
             this.listSupplier.setKode_supplier(this.id);
         }
-        this.listSupplier.setNama_supplier(jTextField30.getText());
-        this.listSupplier.setAlamat_supplier(jTextField30.getText());
-        this.listSupplier.setTelepon_supplier(jTextField30.getText());
-        this.listSupplier.setHp_supplier(jTextField30.getText());
-        this.listSupplier.setContact_supplier(jTextField30.getText());
-        this.listSupplier.setKota_supplier(jTextField30.getText());
-        this.listSupplier.setTotal_hutang(Double.parseDouble(jTextField30.getText()));
-        this.listSupplier.setKeterangan(jTextField30.getText());
-        this.listSupplier.setRekening(jTextField30.getText());
-        this.listSupplier.setStatus(aktif.isSelected() ? 0 : 1);
+        this.listSupplier.setNama_supplier(jTextField8.getText());
+        this.listSupplier.setAlamat_supplier(jTextField33.getText());
+        this.listSupplier.setTelepon_supplier(jTextField9.getText());
+        this.listSupplier.setHp_supplier(jTextField36.getText());
+        this.listSupplier.setContact_supplier(jTextField10.getText());
+        this.listSupplier.setKota_supplier(jTextField37.getText());
+        this.listSupplier.setTotal_hutang(Double.parseDouble(jTextField11.getText()));
+        this.listSupplier.setKeterangan(jTextField38.getText());
+        this.listSupplier.setRekening(jTextField13.getText());
+        this.listSupplier.setStatus(aktif.isSelected() ? 1 : 0);
+
+        this.dispose();
     }//GEN-LAST:event_jLabel68MouseClicked
 
     public static void main(String args[]) {

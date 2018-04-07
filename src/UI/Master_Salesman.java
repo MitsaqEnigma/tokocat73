@@ -1,4 +1,3 @@
-
 package UI;
 
 import Java.Connect;
@@ -10,18 +9,26 @@ import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
 import javax.swing.table.DefaultTableModel;
 
-public class Master_Salesman extends javax.swing.JFrame {
+public class Master_Salesman extends javax.swing.JDialog {
 
     private Connect connection;
     private ArrayList<ListSalesman> list;
     private ListSalesman listSalesman;
     private DefaultTableModel tabel;
     private ResultSet hasil;
-    int dd;
-//    private TableModel model;
-    
-    
+    private int dd;
+
     public Master_Salesman() {
+        initComponents();
+        connection = new Connect();
+        tabel = new DefaultTableModel(new String[]{"No", "Nama", "Contact", "Telepon", "Alamat", "Kota"}, 0);
+        jTable9.setModel(tabel);
+        jTable9.getColumnModel().getColumn(0).setPreferredWidth(5);
+        dd = jComboBox7.getSelectedIndex();
+    }
+
+    public Master_Salesman(java.awt.Frame parent, boolean modal, Connect connection) {
+        super(parent, modal);
         initComponents();
         connection = new Connect();
         tabel = new DefaultTableModel(new String[]{"No", "Nama", "Contact", "Telepon", "Alamat", "Kota"}, 0);
@@ -30,14 +37,14 @@ public class Master_Salesman extends javax.swing.JFrame {
         dd = jComboBox7.getSelectedIndex();
 //        tampilTabel(1);
     }
-    
-     private void deleteTabel(){
+
+    private void deleteTabel() {
         int baris = tabel.getRowCount();
         for (int i = 0; i < baris; i++) {
             tabel.removeRow(0);
         }
     }
-    
+
 //    public String tampilTabel1(int aktif){
 //        String data = "";
 //        try{
@@ -52,35 +59,34 @@ public class Master_Salesman extends javax.swing.JFrame {
 //        }
 //        return data;
 //    }
-     
-    public String tampilTabel(int aktif){
+    public String tampilTabel(int aktif) {
         String data = "";
-        try{
-            data = "SELECT nama_salesman, contact_salesman, telepon_salesman, alamat, kota_salesman FROM salesman WHERE aktif_sales = '"+aktif+"'";
+        try {
+            data = "SELECT nama_salesman, contact_salesman, telepon_salesman, alamat, kota_salesman FROM salesman WHERE aktif_sales = '" + aktif + "'";
             hasil = connection.ambilData(data);
             System.out.println("sukses query tampil tabel");
             setModel(hasil);
-        } catch(Exception e){
-            System.out.println("Error Master Salesman - tampil tabel "+e);
+        } catch (Exception e) {
+            System.out.println("Error Master Salesman - tampil tabel " + e);
         }
         return data;
     }
-    
-    public String tampilTabelSemua(){
+
+    public String tampilTabelSemua() {
         String data = "";
-        try{
+        try {
             data = "SELECT nama_salesman, contact_salesman, telepon_salesman, alamat, kota_salesman FROM salesman";
             hasil = connection.ambilData(data);
             System.out.println("sukses query tampil tabel semua");
             setModel(hasil);
-        } catch(Exception e){
-            System.out.println("Error Master Salesman - tampil tabel semua "+e);
+        } catch (Exception e) {
+            System.out.println("Error Master Salesman - tampil tabel semua " + e);
         }
         return data;
     }
-    
-    public void setModel(ResultSet hasil){
-        try{
+
+    public void setModel(ResultSet hasil) {
+        try {
             list = new ArrayList<>();
             int no = 1;
             while (hasil.next()) {
@@ -100,9 +106,9 @@ public class Master_Salesman extends javax.swing.JFrame {
                     this.listSalesman.getKota_salesman()
                 });
                 no++;
-                listSalesman = null;                        
+                listSalesman = null;
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
     }
@@ -319,36 +325,36 @@ public class Master_Salesman extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton33ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton33ActionPerformed
-         Master_Salesman_TambahSalesman ts=new Master_Salesman_TambahSalesman();
-        ts.setVisible(true); 
+        Master_Salesman_TambahSalesman ts = new Master_Salesman_TambahSalesman();
+        ts.setVisible(true);
     }//GEN-LAST:event_jButton33ActionPerformed
 
     private void jButton29ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton29ActionPerformed
-        Master_Salesman_TambahSalesman ts=new Master_Salesman_TambahSalesman();
+        Master_Salesman_TambahSalesman ts = new Master_Salesman_TambahSalesman();
         ts.setVisible(true);
     }//GEN-LAST:event_jButton29ActionPerformed
 
     private void jButton34ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton34ActionPerformed
-        Master_Login log=new Master_Login();
+        Master_Login log = new Master_Login();
         log.setVisible(true);
     }//GEN-LAST:event_jButton34ActionPerformed
 
     private void jComboBox7PopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_jComboBox7PopupMenuWillBecomeInvisible
         dd = jComboBox7.getSelectedIndex();
-        if(dd == 0){
+        if (dd == 0) {
             deleteTabel();
             tampilTabel(1);
-        } else if(dd == 1){
+        } else if (dd == 1) {
             deleteTabel();
             tampilTabel(0);
-        } else if(dd == 2){
+        } else if (dd == 2) {
             deleteTabel();
             tampilTabelSemua();
         }
     }//GEN-LAST:event_jComboBox7PopupMenuWillBecomeInvisible
 
     private void jTextField90KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField90KeyTyped
-        
+
     }//GEN-LAST:event_jTextField90KeyTyped
 
     /**
