@@ -911,7 +911,7 @@ public class Awal extends javax.swing.JFrame {
     }//GEN-LAST:event_SaldoKeuanganActionPerformed
 
     private void SupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SupplierActionPerformed
-      Master_Supplier sup=new Master_Supplier();
+      Master_Supplier sup=new Master_Supplier(this, rootPaneCheckingEnabled, connection);
       sup.setVisible(true);
       sup.setFocusable(true);
     }//GEN-LAST:event_SupplierActionPerformed

@@ -12,6 +12,7 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -279,6 +280,11 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable2MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable2);
 
         vSearch.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -369,6 +375,11 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTable3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable3MouseClicked(evt);
             }
         });
         jScrollPane3.setViewportView(jTable3);
@@ -497,9 +508,22 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         dPilihBarang.setLocationRelativeTo(null);
     }//GEN-LAST:event_btnTambahBarangReturActionPerformed
 
+    private void jTable3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable3MouseClicked
+        
+    }//GEN-LAST:event_jTable3MouseClicked
+
     private void vSearchKeyTyped(java.awt.event.KeyEvent evt){
         deleteTabel(tabelBarang);
         tampilTabelDataBarang(vSearch.getText().toString());
+    }
+    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {                                     
+        int row = jTable2.getSelectedRow();
+        if(row < 0){
+            JOptionPane.showMessageDialog(null, "Silahkan Pilih Barang");
+        } else{
+            System.out.println("row yg di dipilih "+row);
+            dPilihDataBarang.dispose();
+        }
     }
     /**
      * @param args the command line arguments

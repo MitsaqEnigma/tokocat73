@@ -383,7 +383,6 @@ public class Master_Pegawai extends javax.swing.JDialog {
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
-
         if (jTable6.getSelectedRow() < 0) {
             JOptionPane.showMessageDialog(null, "Pilih Pegawai yang akan diedit");
         } else {

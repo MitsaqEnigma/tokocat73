@@ -3,8 +3,7 @@ package Java;
 public class ListSupplier {
     private int kode_supplier,status;
     private double total_hutang;
-    private String nama_supplier,contact_supplier,telepon_supplier;
-    private String alamat_supplier, hp_supplier, kota_supplier , keterangan, rekening;
+    private String nama_supplier, contact_supplier, telepon_supplier, alamat_supplier, hp_supplier, kota_supplier , keterangan, rekening;
 
     public int getKode_supplier() {
         return kode_supplier;
