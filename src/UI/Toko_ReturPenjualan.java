@@ -5,11 +5,15 @@
  */
 package UI;
 
+import Java.Connect;
 import static java.lang.Thread.sleep;
+import java.sql.ResultSet;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -17,15 +21,25 @@ import javax.swing.JFrame;
  */
 public class Toko_ReturPenjualan extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ReturPenjualan
-     */
+    private DefaultTableModel tabelBarang, tabelRetur;
+    private ResultSet hasil;
+    private Connect connection;
+    
+    
     
     public Toko_ReturPenjualan() {
         initComponents();
         this.setLocationRelativeTo(null);
-        
+        connection = new Connect();
+        tabelBarang = new DefaultTableModel(new String[]{"No.","Kode","Nama Barang"},0);
+        jTable2.setModel(tabelBarang);
+        jTable2.getColumnModel().getColumn(0).setPreferredWidth(5);
+        jTable2.getColumnModel().getColumn(1).setPreferredWidth(5);
+        tabelRetur = new DefaultTableModel(new String[]{"No.","Barang","Satuan","Jumlah","Harga","Saldo"},0);
+        jTable3.setModel(tabelRetur);
+        jTable3.getColumnModel().getColumn(0).setPreferredWidth(5);
         showDate();
+        
     }
     
     public void setPlaceHolder(javax.swing.JTextField a, String b) {
@@ -51,6 +65,44 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
                 vdatetime.setText(dt.format(d));
             }
         }, 500, 500);
+    }
+    
+    private String tampilTabelDataBarang(String search){
+        String data = "";
+        try{
+            data = "SELECT proud_code, nama_barang "
+                + "FROM barang "
+                +(search.equalsIgnoreCase("*") ? "" : "WHERE nama_barang LIKE '%" +search+ "%' OR proud_code LIKE '%" +search+ "%'" )+" "
+                + "ORDER BY kode_barang";
+            hasil = connection.ambilData(data);
+            setModel(hasil);
+            System.out.println("Tampil data sukses");
+        } catch(Exception e){
+            System.out.println("Error /Toko_ReturPenjualan/tampilTabelDataBarang -> "+e);
+        }
+        
+        return data;
+    }
+    
+    public void setModel(ResultSet hasil){
+        try{
+            int no = 1;
+            while (hasil.next()){
+                String kode = hasil.getString("proud_code");
+                String nama = hasil.getString("nama_barang");
+                tabelBarang.addRow(new Object[]{no,kode,nama});
+                no++;
+            }
+        } catch(Exception e){
+            System.out.println("Error /Toko_ReturPenjualan/setModel -> "+e);
+        }
+    }
+    
+    private void deleteTabel(DefaultTableModel NamaTabel){
+        int baris = NamaTabel.getRowCount();
+        for (int i = 0; i < baris; i++) {
+            NamaTabel.removeRow(0);
+        }
     }
 
     /**
@@ -228,7 +280,18 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable2MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable2);
+
+        vSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                vSearchKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout dPilihDataBarangLayout = new javax.swing.GroupLayout(dPilihDataBarang.getContentPane());
         dPilihDataBarang.getContentPane().setLayout(dPilihDataBarangLayout);
@@ -256,6 +319,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         jReturPenjualan.setBackground(new java.awt.Color(255, 255, 255));
+        jReturPenjualan.setInheritsPopupMenu(true);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -313,6 +377,11 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable3MouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(jTable3);
 
         btnSimpanPenjualan1.setText("Simpan Penjualan");
@@ -328,6 +397,11 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 vSearchReturFocusLost(evt);
+            }
+        });
+        vSearchRetur.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                vSearchReturKeyTyped(evt);
             }
         });
 
@@ -384,7 +458,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jReturPenjualan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jReturPenjualan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -394,20 +468,9 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnTambahBarangReturActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahBarangReturActionPerformed
-        dPilihBarang.show();
-        dPilihBarang.setLocationRelativeTo(null);
-    }//GEN-LAST:event_btnTambahBarangReturActionPerformed
-
-    private void vSearchReturFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_vSearchReturFocusGained
-        setPlaceHolder(vSearchRetur, null);
-    }//GEN-LAST:event_vSearchReturFocusGained
-
-    private void vSearchReturFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_vSearchReturFocusLost
-        setPlaceHolder(vSearchRetur, null);
-    }//GEN-LAST:event_vSearchReturFocusLost
-
     private void vNamaBarangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_vNamaBarangMouseClicked
+        deleteTabel(tabelBarang);
+        tampilTabelDataBarang("*");
         dPilihDataBarang.show();
         dPilihDataBarang.setLocationRelativeTo(null);
     }//GEN-LAST:event_vNamaBarangMouseClicked
@@ -428,6 +491,40 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         setPlaceHolder(vSearch, null);
     }//GEN-LAST:event_vSearchFocusLost
 
+    private void vSearchReturKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_vSearchReturKeyTyped
+
+    }//GEN-LAST:event_vSearchReturKeyTyped
+
+    private void vSearchReturFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_vSearchReturFocusLost
+        setPlaceHolder(vSearchRetur, null);
+    }//GEN-LAST:event_vSearchReturFocusLost
+
+    private void vSearchReturFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_vSearchReturFocusGained
+        setPlaceHolder(vSearchRetur, null);
+    }//GEN-LAST:event_vSearchReturFocusGained
+
+    private void btnTambahBarangReturActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahBarangReturActionPerformed
+        dPilihBarang.show();
+        dPilihBarang.setLocationRelativeTo(null);
+    }//GEN-LAST:event_btnTambahBarangReturActionPerformed
+
+    private void jTable3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable3MouseClicked
+        
+    }//GEN-LAST:event_jTable3MouseClicked
+
+    private void vSearchKeyTyped(java.awt.event.KeyEvent evt){
+        deleteTabel(tabelBarang);
+        tampilTabelDataBarang(vSearch.getText().toString());
+    }
+    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {                                     
+        int row = jTable2.getSelectedRow();
+        if(row < 0){
+            JOptionPane.showMessageDialog(null, "Silahkan Pilih Barang");
+        } else{
+            System.out.println("row yg di dipilih "+row);
+            dPilihDataBarang.dispose();
+        }
+    }
     /**
      * @param args the command line arguments
      */
