@@ -1,3 +1,0 @@
-UI.MyComboBoxRenderer
-UI.Toko_Transaksi
-UI.MyComboBoxEditor
