@@ -3,47 +3,44 @@ package UI;
 import Java.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
 
-public class Master_Supplier extends javax.swing.JFrame {
+public class Master_Supplier extends javax.swing.JDialog {
 
-    private ResultSet hasil1;
+    private ResultSet hasil;
     private Connect connection;
+    private PreparedStatement PS;
     private ArrayList<ListSupplier> list;
     private ListSupplier listSupplier;
     private TableModel model;
+    private MouseAdapter MA;
     private String comboBox;
 
     public Master_Supplier() {
         initComponents();
-        this.setLocationRelativeTo(null);
-        connection = new Connect();
-        tampilTabelTidak_Aktif(1);
     }
 
-    private String tampilTabelAll() {
-        String datax = "";
-        try {
-            datax = "SELECT kode_supplier, nama_supplier,alamat_supplier, telepon_supplier, contact_supplier from supplier";
-            hasil1 = connection.ambilData(datax);
-            setModel(hasil1);
-        } catch (Exception e) {
-            System.out.println("Error tampil tabel");
-        }
-        return datax;
+    public Master_Supplier(java.awt.Frame parent, boolean modal, Connect connection) {
+        super(parent, modal);
+        initComponents();
+//        prep
+        this.connection = connection;
+        tampilTabel(1);
     }
 
-    private String tampilTabelTidak_Aktif(int id) {
+    private String tampilTabel(int id) {
         String datax = "";
         try {
-            datax = "SELECT kode_supplier, nama_supplier,alamat_supplier, telepon_supplier, contact_supplier from supplier where aktif_supplier='" + id + "'";
-            hasil1 = connection.ambilData(datax);
-            setModel(hasil1);
+            datax = "SELECT * "
+                    + "from supplier "
+                    + "" + (id == -1 ? "" : "where aktif_supplier='" + id + "' ") + "";
+            hasil = connection.ambilData(datax);
+            setModel(hasil);
         } catch (Exception e) {
             System.out.println("Error tampil tabel");
         }
@@ -51,8 +48,71 @@ public class Master_Supplier extends javax.swing.JFrame {
     }
 
     private void updateData(int kodeSupplier) {
-        String sql = "Update supplier set kode_unik=?,nama_pegawai=?,kode_lokasi=?,alamat_pegawai=?,kota_pegawai=?,telepon_pegawai=?,contact_pegawai=?,status_pegawai=? where kode_Supplier='" + kodeSupplier + "'";
-        connection.simpanData(sql);
+        PS = null;
+        try {
+            String sql = "Update supplier set nama_supplier=?,alamat_supplier=?,"
+                    + "kota_supplier=?,telepon_supplier=?,handphone_supplier=?,contact_supplier=?,"
+                    + "keterangan_supplier=?,rekening_supplier=?,aktif_supplier=? "
+                    + "where kode_Supplier=?";
+            PS = connection.Connect().prepareStatement(sql);
+            PS.setString(1, listSupplier.getNama_supplier());
+            PS.setString(2, listSupplier.getAlamat_supplier());
+            PS.setString(3, listSupplier.getKota_supplier());
+            PS.setString(4, listSupplier.getTelepon_supplier());
+            PS.setString(5, listSupplier.getHp_supplier());
+            PS.setString(6, listSupplier.getContact_supplier());
+            PS.setString(7, listSupplier.getKeterangan());
+            PS.setString(8, listSupplier.getRekening());
+            PS.setInt(9, listSupplier.getStatus());
+            PS.setInt(10, listSupplier.getKode_supplier());
+//            System.out.println(sql);
+            PS.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Master_Supplier_Line_50_" + e.toString());
+        } finally {
+            tampilTabel(-1);
+        }
+    }
+
+    private void insertData(ListSupplier listSupplier) {
+        PS = null;
+        if (listSupplier.getKode_supplier() != 0) {
+            try {
+                String sql = "insert into supplier values (?,?,?,?,?,?,?,?,?,?,?)";
+                PS = connection.Connect().prepareStatement(sql);
+                PS.setInt(1, listSupplier.getKode_supplier());
+                PS.setString(2, listSupplier.getNama_supplier());
+                PS.setString(3, listSupplier.getAlamat_supplier());
+                PS.setString(4, listSupplier.getKota_supplier());
+                PS.setString(5, listSupplier.getKota_supplier());
+                PS.setString(6, listSupplier.getTelepon_supplier());
+                PS.setString(7, listSupplier.getHp_supplier());
+                PS.setString(8, listSupplier.getContact_supplier());
+                PS.setString(9, listSupplier.getRekening());
+                PS.setInt(10, listSupplier.getStatus());
+                PS.setString(11, listSupplier.getKeterangan());
+//            System.out.println(sql);
+                PS.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println("Master_Supplier_Line_75_" + e.toString());
+            } finally {
+                tampilTabel(-1);
+            }
+        }
+    }
+
+    private void deleteData(ListSupplier listSupplier) {
+        PS = null;
+        try {
+            String sql = "delete from supplier where kode_supplier=?";
+            PS = connection.Connect().prepareStatement(sql);
+            PS.setInt(1, listSupplier.getKode_supplier());
+            PS.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Master_Supplier_Line_75_" + e.toString());
+        } finally {
+            tampilTabel(-1);
+        }
     }
 
     private void setModel(ResultSet hasil) {
@@ -62,9 +122,14 @@ public class Master_Supplier extends javax.swing.JFrame {
                 this.listSupplier = new ListSupplier();
                 this.listSupplier.setKode_supplier(hasil.getInt("kode_supplier"));
                 this.listSupplier.setNama_supplier(hasil.getString("nama_supplier"));
-                this.listSupplier.setContact_supplier(hasil.getString("contact_supplier"));
-                this.listSupplier.setTelepon_supplier(hasil.getString("telepon_supplier"));
                 this.listSupplier.setAlamat_supplier(hasil.getString("alamat_supplier"));
+                this.listSupplier.setKota_supplier(hasil.getString("kota_supplier"));
+                this.listSupplier.setTelepon_supplier(hasil.getString("telepon_supplier"));
+                this.listSupplier.setHp_supplier(hasil.getString("handphone_supplier"));
+                this.listSupplier.setContact_supplier(hasil.getString("contact_supplier"));
+                this.listSupplier.setRekening(hasil.getString("rekening_supplier"));
+                this.listSupplier.setStatus(hasil.getInt("aktif_supplier"));
+                this.listSupplier.setKeterangan(hasil.getString("keterangan_supplier"));
                 list.add(listSupplier);
                 listSupplier = null;
             }
@@ -76,11 +141,19 @@ public class Master_Supplier extends javax.swing.JFrame {
         }
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+    private int getNewId() {
+        String sql = "SELECT kode_supplier FROM supplier ORDER BY kode_supplier DESC LIMIT 1";
+        int id = 0;
+        try {
+            hasil = connection.ambilData(sql);
+            while (hasil.next()) {
+                id = hasil.getInt("kode_supplier") + 1;
+            }
+        } catch (SQLException e) {
+        }
+        return id;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -99,6 +172,7 @@ public class Master_Supplier extends javax.swing.JFrame {
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator4 = new javax.swing.JSeparator();
         jComboBox4 = new javax.swing.JComboBox<>();
+        jLabel23 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -182,7 +256,7 @@ public class Master_Supplier extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jLabel1)
                 .addGap(8, 8, 8)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -209,6 +283,11 @@ public class Master_Supplier extends javax.swing.JFrame {
         jLabel22.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         jLabel22.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Gambar/if_document_delete_61766.png"))); // NOI18N
         jLabel22.setText("F5-Delete");
+        jLabel22.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel22MouseClicked(evt);
+            }
+        });
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -220,6 +299,15 @@ public class Master_Supplier extends javax.swing.JFrame {
         jComboBox4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox4ActionPerformed(evt);
+            }
+        });
+
+        jLabel23.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        jLabel23.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Gambar/if_gtk-edit_20500.png"))); // NOI18N
+        jLabel23.setText("F4-Hutang");
+        jLabel23.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel23MouseClicked(evt);
             }
         });
 
@@ -251,7 +339,9 @@ public class Master_Supplier extends javax.swing.JFrame {
                         .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel22)
-                        .addGap(0, 402, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel23)
+                        .addGap(0, 325, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -268,7 +358,8 @@ public class Master_Supplier extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel21)
                                     .addComponent(jLabel22)
-                                    .addComponent(jLabel20))
+                                    .addComponent(jLabel20)
+                                    .addComponent(jLabel23))
                                 .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -286,59 +377,67 @@ public class Master_Supplier extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel20MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel20MouseClicked
-        Master_Supplier_TambahEdit ste = new Master_Supplier_TambahEdit();
-        ste.setVisible(true);
-        ste.setFocusable(true);
+        listSupplier = new ListSupplier();
+        Master_Supplier_TambahEdit tp = new Master_Supplier_TambahEdit(new Awal(rootPaneCheckingEnabled), rootPaneCheckingEnabled, listSupplier, getNewId());
+        tp.setLocationRelativeTo(this);
+        tp.setVisible(true);
+        insertData(listSupplier);
     }//GEN-LAST:event_jLabel20MouseClicked
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
-        jTable2.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-                if (mouseEvent.getClickCount() == 2) {
-                    System.out.println("double click");
-//                    Master_Supplier_KartuHutang kh = new Master_Supplier_KartuHutang();
-//                    kh.setVisible(true);
-//                    kh.setFocusable(true);
-                    jTable2.clearSelection();
-                }
-            }
-        });
+        this.listSupplier = list.get(jTable2.getSelectedRow());
+//        System.out.println(this.listSupplier.getKode_supplier());
+
+//        jTable2.addMouseListener(MA = new MouseAdapter() {
+//            @Override
+//            public void mousePressed(MouseEvent mouseEvent) {
+//                if (mouseEvent.getClickCount() == 2) {
+//                    System.out.println(mouseEvent.getClickCount());
+////                    Master_Supplier_KartuHutang kh = new Master_Supplier_KartuHutang();
+////                    kh.setVisible(true);
+////                    kh.setFocusable(true);
+////jTable2.clearSelection();
+//                }
+//            }
+//        });
     }//GEN-LAST:event_jTable2MouseClicked
-    public void mouseClicked(MouseEvent mouseEvent) {
-        if (mouseEvent.getClickCount() == 2) {
-            System.out.println("double click");
-        }
-    }
+
     private void jLabel21MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel21MouseClicked
         if (jTable2.getSelectedRow() < 0) {
             JOptionPane.showMessageDialog(null, "Pilih Supplier yang akan diedit");
         } else {
-            try {
-                Master_Supplier_TambahEdit tp = new Master_Supplier_TambahEdit(new Awal(rootPaneCheckingEnabled), rootPaneCheckingEnabled, listSupplier, true);
-                tp.setLocationRelativeTo(this);
-                tp.setVisible(true);
-                updateData(listSupplier.getKode_supplier());
-//                System.out.println(list.get(0).getNama_pegawai());
-            } catch (Exception e) {
-            }
+            Master_Supplier_TambahEdit tp = new Master_Supplier_TambahEdit(new Awal(rootPaneCheckingEnabled), rootPaneCheckingEnabled, listSupplier, true);
+            tp.setLocationRelativeTo(this);
+            tp.setVisible(true);
+            updateData(listSupplier.getKode_supplier());
         }
     }//GEN-LAST:event_jLabel21MouseClicked
 
     private void jComboBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox4ActionPerformed
         comboBox = jComboBox4.getSelectedItem().toString();
-        if (jComboBox4.getSelectedIndex() == 0) {
-            tampilTabelTidak_Aktif(1);
-        } else if (jComboBox4.getSelectedIndex() == 1) {
-            tampilTabelTidak_Aktif(0);
-        } else {
-            tampilTabelAll();
+        switch (jComboBox4.getSelectedIndex()) {
+            case 0:
+                tampilTabel(1);
+                break;
+            case 1:
+                tampilTabel(0);
+                break;
+            default:
+                tampilTabel(-1);
+                break;
         }
     }//GEN-LAST:event_jComboBox4ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void jLabel23MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel23MouseClicked
+        Master_Supplier_KartuHutang kh = new Master_Supplier_KartuHutang(new Awal(rootPaneCheckingEnabled), rootPaneCheckingEnabled, listSupplier, true);
+        kh.setLocationRelativeTo(this);
+        kh.setVisible(true);
+    }//GEN-LAST:event_jLabel23MouseClicked
+
+    private void jLabel22MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel22MouseClicked
+        deleteData(listSupplier);
+    }//GEN-LAST:event_jLabel22MouseClicked
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -362,37 +461,6 @@ public class Master_Supplier extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Master_Supplier.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -408,6 +476,7 @@ public class Master_Supplier extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
