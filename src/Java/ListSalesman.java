@@ -1,10 +1,5 @@
-
 package Java;
 
-/**
- *
- * @author Bisma
- */
 public class ListSalesman {
     private String nama_salesman, contact_salesman, telepon_salesman, alamat_salesman, kota_salesman;
     private int no;
