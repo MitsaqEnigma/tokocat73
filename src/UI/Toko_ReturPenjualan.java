@@ -25,8 +25,6 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     private ResultSet hasil;
     private Connect connection;
     
-    
-    
     public Toko_ReturPenjualan() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -104,6 +102,15 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
             NamaTabel.removeRow(0);
         }
     }
+    
+    private void isiPilihBarang(String kode){
+        try{
+            String data = "SELECT nama_barang, ";
+        } catch(Exception e){
+            System.out.println("");
+        }
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -160,6 +167,8 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         });
 
         jLabel5.setText("Satuan");
+
+        vHarga.setEditable(false);
 
         jLabel6.setText("Harga");
 
@@ -388,6 +397,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
 
         jLabel16.setText("Total");
 
+        jTextField5.setEditable(false);
         jTextField5.setText("0");
 
         vSearchRetur.setText("Search");
@@ -521,7 +531,9 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         if(row < 0){
             JOptionPane.showMessageDialog(null, "Silahkan Pilih Barang");
         } else{
-            System.out.println("row yg di dipilih "+row);
+//            System.out.println("row yg di dipilih "+row);
+            String kode = jTable2.getModel().getValueAt(row, 1).toString();
+            isiPilihBarang(kode);
             dPilihDataBarang.dispose();
         }
     }
