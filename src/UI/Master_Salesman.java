@@ -1,86 +1,55 @@
 package UI;
 
-import Java.Connect;
-import Java.ListPegawai;
-import Java.ListSalesman;
+import Java.*;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import javax.swing.table.TableModel;
 import javax.swing.table.DefaultTableModel;
 
 public class Master_Salesman extends javax.swing.JDialog {
 
-    private Connect connection;
     private ArrayList<ListSalesman> list;
     private ListSalesman listSalesman;
     private DefaultTableModel tabel;
     private ResultSet hasil;
+    private Connect connection;
     private int dd;
 
     public Master_Salesman() {
         initComponents();
-        connection = new Connect();
-        tabel = new DefaultTableModel(new String[]{"No", "Nama", "Contact", "Telepon", "Alamat", "Kota"}, 0);
-        jTable9.setModel(tabel);
-        jTable9.getColumnModel().getColumn(0).setPreferredWidth(5);
-        dd = jComboBox7.getSelectedIndex();
+//        connection = new Connect();
+//        tabel = new DefaultTableModel(new String[]{"No", "Nama", "Contact", "Telepon", "Alamat", "Kota"}, 0);
+//        jTable9.setModel(tabel);
+//        jTable9.getColumnModel().getColumn(0).setPreferredWidth(5);
+//        dd = jComboBox7.getSelectedIndex();
     }
 
     public Master_Salesman(java.awt.Frame parent, boolean modal, Connect connection) {
         super(parent, modal);
         initComponents();
-        connection = new Connect();
-        tabel = new DefaultTableModel(new String[]{"No", "Nama", "Contact", "Telepon", "Alamat", "Kota"}, 0);
-        jTable9.setModel(tabel);
-        jTable9.getColumnModel().getColumn(0).setPreferredWidth(5);
-        dd = jComboBox7.getSelectedIndex();
-//        tampilTabel(1);
+        this.connection = connection;
+//        code here
+        jTable9.setModel(new DefaultTableModel(new String[]{"No", "Nama", "Contact", "Telepon", "Alamat", "Kota"}, 0));
+        tampilTabel(1);
     }
 
     private void deleteTabel() {
-        int baris = tabel.getRowCount();
-        for (int i = 0; i < baris; i++) {
+        for (int i = 0; i < tabel.getRowCount(); i++) {
             tabel.removeRow(0);
         }
     }
 
-//    public String tampilTabel1(int aktif){
-//        String data = "";
-//        try{
-//            data = "SELECT nama_salesman, contact_salesman, telepon_salesman, alamat, kota_salesman "
-//                    + "FROM salesman "
-//                    + "WHERE "+ (dd == 0 ? "aktif_sales = '"+aktif+"' " :(dd == 1) ) +";
-//            hasil = connection.ambilData(data);
-//            System.out.println("sukses query tampil tabel");
-//            setModel(hasil);
-//        } catch(Exception e){
-//            System.out.println("Error Master Salesman - tampil tabel "+e);
-//        }
-//        return data;
-//    }
     public String tampilTabel(int aktif) {
-        String data = "";
+        String data = "SELECT kode_salesman, nama_salesman, contact_salesman, telepon_salesman, alamat, kota_salesman "
+                + "FROM salesman "
+                + (aktif != -1 ? "WHERE aktif_sales = " + aktif + "" : "") + "";
         try {
-            data = "SELECT nama_salesman, contact_salesman, telepon_salesman, alamat, kota_salesman FROM salesman WHERE aktif_sales = '" + aktif + "'";
             hasil = connection.ambilData(data);
-            System.out.println("sukses query tampil tabel");
             setModel(hasil);
         } catch (Exception e) {
-            System.out.println("Error Master Salesman - tampil tabel " + e);
-        }
-        return data;
-    }
-
-    public String tampilTabelSemua() {
-        String data = "";
-        try {
-            data = "SELECT nama_salesman, contact_salesman, telepon_salesman, alamat, kota_salesman FROM salesman";
-            hasil = connection.ambilData(data);
-            System.out.println("sukses query tampil tabel semua");
-            setModel(hasil);
-        } catch (Exception e) {
-            System.out.println("Error Master Salesman - tampil tabel semua " + e);
+            System.out.println("Master_Salesman_Line_43_" + e.toString());
+            System.out.println(data);
         }
         return data;
     }
@@ -88,36 +57,34 @@ public class Master_Salesman extends javax.swing.JDialog {
     public void setModel(ResultSet hasil) {
         try {
             list = new ArrayList<>();
-            int no = 1;
+            tabel = new DefaultTableModel(new String[]{"No", "Nama", "Contact", "Telepon", "Alamat", "Kota"}, 0);
+//            int no = 1;
             while (hasil.next()) {
-                this.listSalesman = new ListSalesman();
-                this.listSalesman.setNo(no);
-                this.listSalesman.setNama_salesman(hasil.getString("nama_salesman"));
-                this.listSalesman.setContact_salesman(hasil.getString("contact_salesman"));
-                this.listSalesman.setTelepon_salesman(hasil.getString("telepon_salesman"));
-                this.listSalesman.setAlamat_salesman(hasil.getString("alamat"));
-                this.listSalesman.setKota_salesman(hasil.getString("kota_salesman"));
-//                list.add(listSalesman);
+                listSalesman = new ListSalesman();
+                listSalesman.setNo(hasil.getInt("kode_salesman"));
+                listSalesman.setNama_salesman(hasil.getString("nama_salesman"));
+                listSalesman.setContact_salesman(hasil.getString("contact_salesman"));
+                listSalesman.setTelepon_salesman(hasil.getString("telepon_salesman"));
+                listSalesman.setAlamat_salesman(hasil.getString("alamat"));
+                listSalesman.setKota_salesman(hasil.getString("kota_salesman"));
+                list.add(listSalesman);
                 tabel.addRow(new Object[]{
-                    this.listSalesman.getNo(),
-                    this.listSalesman.getContact_salesman(),
-                    this.listSalesman.getTelepon_salesman(),
-                    this.listSalesman.getAlamat_salesman(),
-                    this.listSalesman.getKota_salesman()
+                    listSalesman.getNo(),
+                    listSalesman.getContact_salesman(),
+                    listSalesman.getTelepon_salesman(),
+                    listSalesman.getAlamat_salesman(),
+                    listSalesman.getKota_salesman()
                 });
-                no++;
+//                no++;
                 listSalesman = null;
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+        } catch (SQLException e) {
+            System.out.println("Master_Salesman_Line_56_" + e.toString());
+        } finally {
+            jTable9.setModel(tabel);
         }
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -341,15 +308,19 @@ public class Master_Salesman extends javax.swing.JDialog {
 
     private void jComboBox7PopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_jComboBox7PopupMenuWillBecomeInvisible
         dd = jComboBox7.getSelectedIndex();
-        if (dd == 0) {
-            deleteTabel();
-            tampilTabel(1);
-        } else if (dd == 1) {
-            deleteTabel();
-            tampilTabel(0);
-        } else if (dd == 2) {
-            deleteTabel();
-            tampilTabelSemua();
+        deleteTabel();
+        switch (dd) {
+            case 0:
+                tampilTabel(1);
+                break;
+            case 1:
+                tampilTabel(0);
+                break;
+            case 2:
+                tampilTabel(-1);
+                break;
+            default:
+                break;
         }
     }//GEN-LAST:event_jComboBox7PopupMenuWillBecomeInvisible
 
@@ -357,9 +328,6 @@ public class Master_Salesman extends javax.swing.JDialog {
 
     }//GEN-LAST:event_jTextField90KeyTyped
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
