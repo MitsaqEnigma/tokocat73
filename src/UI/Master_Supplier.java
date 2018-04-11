@@ -3,6 +3,7 @@ package UI;
 import Java.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class Master_Supplier extends javax.swing.JDialog {
 
     private ResultSet hasil;
     private Connect connection;
+    private PreparedStatement PS;
     private ArrayList<ListSupplier> list;
     private ListSupplier listSupplier;
     private TableModel model;
@@ -46,8 +48,71 @@ public class Master_Supplier extends javax.swing.JDialog {
     }
 
     private void updateData(int kodeSupplier) {
-        String sql = "Update supplier set kode_unik=?,nama_pegawai=?,kode_lokasi=?,alamat_pegawai=?,kota_pegawai=?,telepon_pegawai=?,contact_pegawai=?,status_pegawai=? where kode_Supplier='" + kodeSupplier + "'";
-        connection.simpanData(sql);
+        PS = null;
+        try {
+            String sql = "Update supplier set nama_supplier=?,alamat_supplier=?,"
+                    + "kota_supplier=?,telepon_supplier=?,handphone_supplier=?,contact_supplier=?,"
+                    + "keterangan_supplier=?,rekening_supplier=?,aktif_supplier=? "
+                    + "where kode_Supplier=?";
+            PS = connection.Connect().prepareStatement(sql);
+            PS.setString(1, listSupplier.getNama_supplier());
+            PS.setString(2, listSupplier.getAlamat_supplier());
+            PS.setString(3, listSupplier.getKota_supplier());
+            PS.setString(4, listSupplier.getTelepon_supplier());
+            PS.setString(5, listSupplier.getHp_supplier());
+            PS.setString(6, listSupplier.getContact_supplier());
+            PS.setString(7, listSupplier.getKeterangan());
+            PS.setString(8, listSupplier.getRekening());
+            PS.setInt(9, listSupplier.getStatus());
+            PS.setInt(10, listSupplier.getKode_supplier());
+//            System.out.println(sql);
+            PS.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Master_Supplier_Line_50_" + e.toString());
+        } finally {
+            tampilTabel(-1);
+        }
+    }
+
+    private void insertData(ListSupplier listSupplier) {
+        PS = null;
+        if (listSupplier.getKode_supplier() != 0) {
+            try {
+                String sql = "insert into supplier values (?,?,?,?,?,?,?,?,?,?,?)";
+                PS = connection.Connect().prepareStatement(sql);
+                PS.setInt(1, listSupplier.getKode_supplier());
+                PS.setString(2, listSupplier.getNama_supplier());
+                PS.setString(3, listSupplier.getAlamat_supplier());
+                PS.setString(4, listSupplier.getKota_supplier());
+                PS.setString(5, listSupplier.getKota_supplier());
+                PS.setString(6, listSupplier.getTelepon_supplier());
+                PS.setString(7, listSupplier.getHp_supplier());
+                PS.setString(8, listSupplier.getContact_supplier());
+                PS.setString(9, listSupplier.getRekening());
+                PS.setInt(10, listSupplier.getStatus());
+                PS.setString(11, listSupplier.getKeterangan());
+//            System.out.println(sql);
+                PS.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println("Master_Supplier_Line_75_" + e.toString());
+            } finally {
+                tampilTabel(-1);
+            }
+        }
+    }
+
+    private void deleteData(ListSupplier listSupplier) {
+        PS = null;
+        try {
+            String sql = "delete from supplier where kode_supplier=?";
+            PS = connection.Connect().prepareStatement(sql);
+            PS.setInt(1, listSupplier.getKode_supplier());
+            PS.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Master_Supplier_Line_75_" + e.toString());
+        } finally {
+            tampilTabel(-1);
+        }
     }
 
     private void setModel(ResultSet hasil) {
@@ -74,6 +139,19 @@ public class Master_Supplier extends javax.swing.JDialog {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
+    }
+
+    private int getNewId() {
+        String sql = "SELECT kode_supplier FROM supplier ORDER BY kode_supplier DESC LIMIT 1";
+        int id = 0;
+        try {
+            hasil = connection.ambilData(sql);
+            while (hasil.next()) {
+                id = hasil.getInt("kode_supplier") + 1;
+            }
+        } catch (SQLException e) {
+        }
+        return id;
     }
 
     @SuppressWarnings("unchecked")
@@ -205,6 +283,11 @@ public class Master_Supplier extends javax.swing.JDialog {
         jLabel22.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         jLabel22.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Gambar/if_document_delete_61766.png"))); // NOI18N
         jLabel22.setText("F5-Delete");
+        jLabel22.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel22MouseClicked(evt);
+            }
+        });
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -289,16 +372,16 @@ public class Master_Supplier extends javax.swing.JDialog {
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel23.getAccessibleContext().setAccessibleName("F4-Hutang");
-
         setSize(new java.awt.Dimension(979, 562));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel20MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel20MouseClicked
-        Master_Supplier_TambahEdit tp = new Master_Supplier_TambahEdit(new Awal(rootPaneCheckingEnabled), rootPaneCheckingEnabled, listSupplier, true);
-            tp.setLocationRelativeTo(this);
-            tp.setVisible(true);
+        listSupplier = new ListSupplier();
+        Master_Supplier_TambahEdit tp = new Master_Supplier_TambahEdit(new Awal(rootPaneCheckingEnabled), rootPaneCheckingEnabled, listSupplier, getNewId());
+        tp.setLocationRelativeTo(this);
+        tp.setVisible(true);
+        insertData(listSupplier);
     }//GEN-LAST:event_jLabel20MouseClicked
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
@@ -351,6 +434,10 @@ public class Master_Supplier extends javax.swing.JDialog {
         kh.setVisible(true);
     }//GEN-LAST:event_jLabel23MouseClicked
 
+    private void jLabel22MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel22MouseClicked
+        deleteData(listSupplier);
+    }//GEN-LAST:event_jLabel22MouseClicked
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -373,37 +460,6 @@ public class Master_Supplier extends javax.swing.JDialog {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Master_Supplier.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
