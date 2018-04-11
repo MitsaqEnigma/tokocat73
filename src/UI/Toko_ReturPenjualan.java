@@ -6,6 +6,8 @@
 package UI;
 
 import Java.Connect;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import static java.lang.Thread.sleep;
 import java.sql.ResultSet;
 import java.util.TimerTask;
@@ -36,8 +38,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         tabelRetur = new DefaultTableModel(new String[]{"No.","Barang","Satuan","Jumlah","Harga","Saldo"},0);
         jTable3.setModel(tabelRetur);
         jTable3.getColumnModel().getColumn(0).setPreferredWidth(5);
-        showDate();
-        
+        showDate();        
     }
     
     public void setPlaceHolder(javax.swing.JTextField a, String b) {
@@ -74,7 +75,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
                 + "ORDER BY kode_barang";
             hasil = connection.ambilData(data);
             setModel(hasil);
-            System.out.println("Tampil data sukses");
+//            System.out.println("Tampil data sukses");
         } catch(Exception e){
             System.out.println("Error /Toko_ReturPenjualan/tampilTabelDataBarang -> "+e);
         }
@@ -105,9 +106,19 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     
     private void isiPilihBarang(String kode){
         try{
-            String data = "SELECT nama_barang, ";
+            String data = "SELECT nama_barang, harga_jual_3_barang "
+                    + "FROM barang "
+                    + "WHERE proud_code = '"+kode+"' ";
+            hasil = connection.ambilData(data);
+            while (hasil.next()){
+                vNamaBarang.setText(hasil.getString("nama_barang"));
+                vHarga.setText(hasil.getString("harga_jual_3_barang"));
+            }
+            System.out.println("isi pilih barang sukses");
+            vSatuan.addItem("KG");
+            vSatuan.addItem("ONS");
         } catch(Exception e){
-            System.out.println("");
+            System.out.println("Toko_Retur/isiPilihBarang "+e);
         }
     }
     
@@ -173,6 +184,13 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         jLabel6.setText("Harga");
 
         jLabel7.setText("Jumlah");
+
+        vJumlah.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                vJumlahKeyTyped(evt);
+            }
+        });
+        vJumlah.setText("0");
 
         vTotalStok.setText("*Total Stok : ");
 
@@ -522,9 +540,30 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jTable3MouseClicked
 
+    //Membatasi input jumlah menjadi angka
+    
+    
     private void vSearchKeyTyped(java.awt.event.KeyEvent evt){
         deleteTabel(tabelBarang);
         tampilTabelDataBarang(vSearch.getText().toString());
+    }
+    private void vJumlahKeyTyped(java.awt.event.KeyEvent evt){
+        //set text to input only int
+        char vchar = evt.getKeyChar();
+        if(!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)){
+            evt.consume();
+        }
+        
+        if(vJumlah.getText().equalsIgnoreCase("")){
+            
+        } else if(vHarga.getText().equalsIgnoreCase("")){
+            
+        } else{
+            int harga = Integer.parseInt(vHarga.getText().toString());
+            int jumlah = Integer.parseInt(vJumlah.getText().toString());
+            int total = harga*jumlah;
+            vTotalHarga.setText(Integer.toString(total));
+        }
     }
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {                                     
         int row = jTable2.getSelectedRow();
