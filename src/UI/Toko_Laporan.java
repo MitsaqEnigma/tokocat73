@@ -8,9 +8,11 @@ import Java.modelTabelTokoLaporanToko;
 import javax.swing.JFrame;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import java.util.Date;
 import javax.swing.table.TableModel;
 
 public class Toko_Laporan extends javax.swing.JFrame {
@@ -21,18 +23,21 @@ public class Toko_Laporan extends javax.swing.JFrame {
     private ListTokoLaporanToko listTokoLaporanToko;
     private TableModel model;
     private String comboBox;
+    private Date date;
+    private static final SimpleDateFormat SDF = new SimpleDateFormat( "yyyy-MM-dd" ); 
 
     public Toko_Laporan() {
         initComponents();
         this.setLocationRelativeTo(null);
         connection = new Connect();
+        
         tampilTabel();
     }
 
     private String tampilTabel() {
         String datax = "";
         try {
-            datax = "SELECT no_faktur_penjualan, tgl_penjualan, totale, pembaran_udah_bayar from penjualan ";
+            datax = "SELECT no_faktur_penjualan, tgl_penjualan, pembaran_udah_bayar from penjualan ";
             hasil1 = connection.ambilData(datax);
             setModel(hasil1);
         } catch (Exception e) {
@@ -40,10 +45,11 @@ public class Toko_Laporan extends javax.swing.JFrame {
         }
         return datax;
     }
+
     private String tampilTabelSearch(String v1, String v2) {
         String datax = "";
         try {
-            datax = "SELECT no_faktur_penjualan, tgl_penjualan, totale, pembaran_udah_bayar from penjualan where tgl_penjualan between '"+v1+"' and '"+v2+"'";
+            datax = "SELECT no_faktur_penjualan, tgl_penjualan, pembaran_udah_bayar from penjualan where tgl_penjualan between '" + v1 + "' and '" + v2 + "'";
             hasil1 = connection.ambilData(datax);
             setModel(hasil1);
         } catch (Exception e) {
@@ -51,16 +57,18 @@ public class Toko_Laporan extends javax.swing.JFrame {
         }
         return datax;
     }
-    
+
     private void setModel(ResultSet hasil) {
+        int temp=0;
         try {
             list = new ArrayList<>();
             while (hasil.next()) {
-                this.listTokoLaporanToko = new ListTokoLaporanToko();   
-               this.listTokoLaporanToko.setNo_faktur(hasil.getString("no_faktur_penjualan"));
-               this.listTokoLaporanToko.setTanggal(hasil.getString("tgl_penjualan"));
-               this.listTokoLaporanToko.setSaldo(hasil.getInt("totale"));
-               this.listTokoLaporanToko.setTotal(hasil.getInt("pembaran_udah_bayar"));
+                temp = hasil.getInt("pembaran_udah_bayar") + temp;
+                this.listTokoLaporanToko = new ListTokoLaporanToko();
+                this.listTokoLaporanToko.setNo_faktur(hasil.getString("no_faktur_penjualan"));
+                this.listTokoLaporanToko.setTanggal(hasil.getString("tgl_penjualan"));
+                this.listTokoLaporanToko.setTotal(hasil.getInt("pembaran_udah_bayar"));
+                this.listTokoLaporanToko.setSaldo(temp);
                 list.add(listTokoLaporanToko);
                 listTokoLaporanToko = null;
             }
@@ -71,7 +79,7 @@ public class Toko_Laporan extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -79,9 +87,9 @@ public class Toko_Laporan extends javax.swing.JFrame {
         jLaporan = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         btnTampilkanLapJual = new javax.swing.JButton();
-        vSearchReturn1 = new javax.swing.JTextField();
         btnCetakLapJual = new javax.swing.JButton();
-        vSearchReturn2 = new javax.swing.JTextField();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        jDateChooser2 = new com.toedter.calendar.JDateChooser();
         jPanel6 = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
@@ -106,16 +114,6 @@ public class Toko_Laporan extends javax.swing.JFrame {
             }
         });
 
-        vSearchReturn1.setText("Masukan Tanggal");
-        vSearchReturn1.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                vSearchReturn1FocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                vSearchReturn1FocusLost(evt);
-            }
-        });
-
         btnCetakLapJual.setText("Cetak");
         btnCetakLapJual.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -123,15 +121,9 @@ public class Toko_Laporan extends javax.swing.JFrame {
             }
         });
 
-        vSearchReturn2.setText("Masukan Tanggal");
-        vSearchReturn2.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                vSearchReturn2FocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                vSearchReturn2FocusLost(evt);
-            }
-        });
+        jDateChooser1.setDateFormatString("yyyy-MM-dd");
+
+        jDateChooser2.setDateFormatString("yyyy-MM-dd ");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -139,10 +131,10 @@ public class Toko_Laporan extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(vSearchReturn1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(vSearchReturn2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8)
                 .addComponent(btnTampilkanLapJual)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCetakLapJual)
@@ -150,14 +142,19 @@ public class Toko_Laporan extends javax.swing.JFrame {
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnTampilkanLapJual, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(vSearchReturn1)
-                        .addComponent(btnCetakLapJual)
-                        .addComponent(vSearchReturn2)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnTampilkanLapJual, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnCetakLapJual))))
                 .addContainerGap())
         );
 
@@ -283,9 +280,9 @@ public class Toko_Laporan extends javax.swing.JFrame {
             jLaporanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLaporanLayout.createSequentialGroup()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -305,39 +302,22 @@ public class Toko_Laporan extends javax.swing.JFrame {
 
     private void btnTampilkanLapJualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTampilkanLapJualActionPerformed
 
-    if(vSearchReturn1.getText().equals("Masukan Tanggal")){
-      JOptionPane.showMessageDialog(rootPane, "Silahkan Input tanggal 1");
-    }
-    if(vSearchReturn2.getText().equals("Masukan Tanggal")){
-      JOptionPane.showMessageDialog(rootPane, "Silahkan Input tanggal 2");
-    }
-    else{
-        String vSearch1=vSearchReturn1.getText().toString();
-        String vSearch2=vSearchReturn2.getText().toString();
-        tampilTabelSearch(vSearch1,vSearch2);
-    }
+        if (jDateChooser1.getDate()== null) {
+            JOptionPane.showMessageDialog(rootPane, "Silahkan Input tanggal 1");
+        }
+        if (jDateChooser2.getDate()== null) {
+            JOptionPane.showMessageDialog(rootPane, "Silahkan Input tanggal 2");
+        } else {
+            String vSearch1 = SDF.format(jDateChooser1.getDate());
+            String vSearch2 = SDF.format(jDateChooser2.getDate());
+            tampilTabelSearch(vSearch1, vSearch2);
+        }
     }//GEN-LAST:event_btnTampilkanLapJualActionPerformed
 
-    
-    private void vSearchReturn1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_vSearchReturn1FocusGained
-        // TODO add your handling code here:
-    }//GEN-LAST:event_vSearchReturn1FocusGained
-
-    private void vSearchReturn1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_vSearchReturn1FocusLost
-        // TODO add your handling code here:
-    }//GEN-LAST:event_vSearchReturn1FocusLost
 
     private void btnCetakLapJualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakLapJualActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCetakLapJualActionPerformed
-
-    private void vSearchReturn2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_vSearchReturn2FocusGained
-        // TODO add your handling code here:
-    }//GEN-LAST:event_vSearchReturn2FocusGained
-
-    private void vSearchReturn2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_vSearchReturn2FocusLost
-        // TODO add your handling code here:
-    }//GEN-LAST:event_vSearchReturn2FocusLost
 
     /**
      * @param args the command line arguments
@@ -440,6 +420,8 @@ public class Toko_Laporan extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCetakLapJual;
     private javax.swing.JButton btnTampilkanLapJual;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private com.toedter.calendar.JDateChooser jDateChooser2;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel20;
@@ -452,7 +434,5 @@ public class Toko_Laporan extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTable jTable4;
     private javax.swing.JTable jTable6;
-    private javax.swing.JTextField vSearchReturn1;
-    private javax.swing.JTextField vSearchReturn2;
     // End of variables declaration//GEN-END:variables
 }

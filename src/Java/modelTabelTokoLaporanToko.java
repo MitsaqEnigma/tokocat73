@@ -39,9 +39,9 @@ public class modelTabelTokoLaporanToko extends AbstractTableModel{
             case 1:
                 return list.get(rowIndex).getTanggal();
             case 2:
-                return list.get(rowIndex).getSaldo();
-            case 3:
                 return list.get(rowIndex).getTotal();
+            case 3:
+                return list.get(rowIndex).getSaldo();
             default:
                 return null;
         }
@@ -55,9 +55,9 @@ public class modelTabelTokoLaporanToko extends AbstractTableModel{
             case 1:
                 return "Tanggal";
             case 2:
-                return "Saldo";
-            case 3:
                 return "Total";
+            case 3:
+                return "Saldo";
             case 4:
                 return "Aksi";
             default:
