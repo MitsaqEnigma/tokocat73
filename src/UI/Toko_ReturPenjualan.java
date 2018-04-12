@@ -23,9 +23,11 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Toko_ReturPenjualan extends javax.swing.JFrame {
 
+    
     private DefaultTableModel tabelBarang, tabelRetur;
     private ResultSet hasil;
     private Connect connection;
+    private int code_barang = 0;
     
     public Toko_ReturPenjualan() {
         initComponents();

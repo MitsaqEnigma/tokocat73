@@ -1,51 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-<<<<<<< HEAD
-        <group/>
-=======
         <group>
-<<<<<<< HEAD
-            <file>file:/C:/Users/Enigma/Documents/NetBeansProjects/tokocat73/src/UI/Awal.java</file>
-=======
-<<<<<<< HEAD
-            <file>file:/C:/Users/Miracle/Documents/NetBeansProjects/tokocat73/src/UI/Toko_Transaksi.java</file>
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-            <file>file:/C:/Users/Miracle/Documents/NetBeansProjects/tokocat73/src/Java/modelTabelTokoLaporanToko.java</file>
-            <file>file:/C:/Users/Miracle/Documents/NetBeansProjects/tokocat73/src/UI/Toko_Laporan.java</file>
-            <file>file:/C:/Users/Miracle/Documents/NetBeansProjects/tokocat73/src/UI/Master_Supplier.java</file>
-=======
-<<<<<<< HEAD
->>>>>>> fb5f4e27fedd1dd82baf22e38c752e96aab8e4da
-            <file>file:/C:/Users/Enigma/Documents/NetBeansProjects/tokocat73/src/UI/Awal.java</file>
-            <file>file:/C:/Users/Enigma/Documents/NetBeansProjects/tokocat73/src/UI/Master_Salesman.java</file>
-            <file>file:/C:/Users/Enigma/Documents/NetBeansProjects/tokocat73/src/UI/Master_Supplier.java</file>
-<<<<<<< HEAD
-=======
-            <file>file:/C:/Users/Enigma/Documents/NetBeansProjects/tokocat73/src/UI/Master_Supplier_TambahEdit.java</file>
-=======
-<<<<<<< HEAD
-            <file>file:/C:/Users/Miracle/Documents/NetBeansProjects/tokocat73/src/Java/ListPegawai.java</file>
-            <file>file:/C:/Users/Miracle/Documents/NetBeansProjects/tokocat73/src/UI/Master_Supplier.java</file>
-            <file>file:/C:/Users/Miracle/Documents/NetBeansProjects/tokocat73/src/UI/Master_Pegawai_TambahPegawai.java</file>
-            <file>file:/C:/Users/Miracle/Documents/NetBeansProjects/tokocat73/src/Java/Connect.java</file>
-            <file>file:/C:/Users/Miracle/Documents/NetBeansProjects/tokocat73/src/UI/Master_Supplier_TambahEdit.java</file>
-            <file>file:/C:/Users/Miracle/Documents/NetBeansProjects/tokocat73/src/Java/ListSupplier.java</file>
-            <file>file:/C:/Users/Miracle/Documents/NetBeansProjects/tokocat73/src/UI/Master_Pegawai.java</file>
-=======
-            <file>file:/C:/Users/Bisma/Documents/NetBeansProjects/tokocat73/src/UI/Master_Salesman.java</file>
-            <file>file:/C:/Users/Bisma/Documents/NetBeansProjects/tokocat73/src/Java/ListSalesman.java</file>
-            <file>file:/C:/Users/Bisma/Documents/NetBeansProjects/tokocat73/src/UI/Master_Pegawai.java</file>
->>>>>>> ac40082486db5ce5d0df37fa08a115e8d823dc1a
->>>>>>> ce56b89792a2554607f698b4176800ccd01c9187
->>>>>>> 2702a7964e7c83be435b4c5b4c8cbc86279286d5
->>>>>>> fb5f4e27fedd1dd82baf22e38c752e96aab8e4da
->>>>>>> d6627c52c2ccedf278d4c5f071cbcc27d7c38271
->>>>>>> 8dffea8c0d89171979506f380bea1d377cc1fbca
+            <file>file:/C:/Users/Bisma/Documents/NetBeansProjects/tokocat73/src/UI/Toko_ReturPenjualan.java</file>
         </group>
->>>>>>> 6d5371dac2f25fff86077a0167d69f2ed1daed2a
     </open-files>
 </project-private>
