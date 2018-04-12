@@ -10,6 +10,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import static java.lang.Thread.sleep;
 import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,16 +26,18 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Toko_ReturPenjualan extends javax.swing.JFrame {
 
-    
+    private HashMap konversi;
     private DefaultTableModel tabelBarang, tabelRetur;
     private ResultSet hasil;
+    public Statement stmt;
     private Connect connection;
-    private int code_barang = 0;
+    private String code_barang;
     
     public Toko_ReturPenjualan() {
         initComponents();
         this.setLocationRelativeTo(null);
         connection = new Connect();
+        konversi = new HashMap();
         tabelBarang = new DefaultTableModel(new String[]{"No.","Kode","Nama Barang"},0);
         jTable2.setModel(tabelBarang);
         jTable2.getColumnModel().getColumn(0).setPreferredWidth(5);
@@ -108,19 +113,73 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     
     private void isiPilihBarang(String kode){
         try{
-            String data = "SELECT nama_barang, harga_jual_3_barang "
+            String kode_barang = "";
+            String data = "SELECT kode_barang, proud_code, nama_barang, harga_jual_3_barang "
                     + "FROM barang "
                     + "WHERE proud_code = '"+kode+"' ";
             hasil = connection.ambilData(data);
             while (hasil.next()){
+                kode_barang = hasil.getString("kode_barang");
                 vNamaBarang.setText(hasil.getString("nama_barang"));
                 vHarga.setText(hasil.getString("harga_jual_3_barang"));
+                code_barang = hasil.getString("proud_code");
             }
-            System.out.println("isi pilih barang sukses");
-            vSatuan.addItem("KG");
-            vSatuan.addItem("ONS");
+//            System.out.println("isi pilih barang sukses");
+            selectKonversi(kode_barang);
         } catch(Exception e){
             System.out.println("Toko_Retur/isiPilihBarang "+e);
+        }
+    }
+    
+    private String selectLastDataDetailReturn(){
+        String lastNo = "";
+        try{    
+            String data = "SELECT no_faktur_toko_penjualan_return "
+                    + "FROM toko_penjualan_detail_return "
+                    + "ORDER BY id_toko_penjualan_return_detail DESC LIMIT 1";
+            hasil = connection.ambilData(data);
+                while(hasil.next()){
+                    String nomor = hasil.getString("no_faktur_toko_penjualan_return");
+                    lastNo = nomor.substring(nomor.length() - 4);
+                    System.out.println(lastNo);
+                    System.out.println(nomor);
+                }
+        }catch(Exception e){
+            System.out.println("TokoRetur/selectLastData - "+e);
+        }
+        return lastNo;
+    }
+    
+    private void selectKonversi(String kode_barang){
+        vSatuan.removeAllItems();
+        try{
+            String data = "SELECT k.kode_konversi, k.nama_konversi "
+                    + "FROM konversi k, barang_konversi bk "
+                    + "WHERE bk.kode_konversi = k.kode_konversi AND bk.kode_barang = '"+kode_barang+"' ";
+            hasil = connection.ambilData(data);
+            while(hasil.next()){
+                String kode = hasil.getString("kode_konversi");
+                String nama = hasil.getString("nama_konversi");
+                konversi.put(nama, kode);
+                vSatuan.addItem(nama);
+            }
+        } catch(Exception e){
+            System.out.println("Toko_Return/selectKonversi - "+e);
+        }
+    }
+    
+    private void inputTokoDetailReturn(String codeBarang){
+        try{
+            String year = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
+            String no = "RT"+year.substring(year.length()-2)+"-"+selectLastDataDetailReturn();
+            String satuan = (konversi.get(vSatuan.getSelectedItem().toString())).toString();
+            String data = "INSERT INTO toko_penjualan_detail_return(no_faktur_toko_penjualan_return, kode_barang, "
+                    + "jumlah_barang, harga_barang, kode_barang_konversi) VALUES ('"+no+"', '"+code_barang+"',"
+                    + " '"+vJumlah.getText()+"','"+vTotalHarga.getText()+"', '"+satuan+"') ";
+            connection.simpanData(data);
+            dPilihBarang.dispose();
+        } catch(Exception e){
+            System.out.println("Toko_Retur/inputTokoDetailReturn - "+e);
         }
     }
     
@@ -215,6 +274,11 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         btnSimpan.setBackground(new java.awt.Color(85, 222, 93));
         btnSimpan.setForeground(new java.awt.Color(255, 255, 255));
         btnSimpan.setText("Simpan");
+        btnSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanActionPerformed(evt);
+            }
+        });
 
         jLabel8.setText("*Jumlah Pembelian Terakhir :");
 
@@ -542,8 +606,16 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jTable3MouseClicked
 
-    //Membatasi input jumlah menjadi angka
-    
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt){
+        if(code_barang != null && (!vJumlah.getText().equalsIgnoreCase("") && !vJumlah.getText().equalsIgnoreCase("0")) && 
+                !vTotalHarga.getText().equalsIgnoreCase("")){
+            inputTokoDetailReturn(code_barang);
+            vNamaBarang.setText(""); vSatuan.removeAllItems(); vJumlah.setText("0"); 
+            vHarga.setText(""); vTotalHarga.setText(""); code_barang = null; 
+        } else{
+            JOptionPane.showMessageDialog(null, "Silahkan Pilih Barang, Jumlah Barang & Total Harga");
+        }
+    }
     
     private void vSearchKeyTyped(java.awt.event.KeyEvent evt){
         deleteTabel(tabelBarang);
