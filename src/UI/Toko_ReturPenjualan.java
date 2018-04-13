@@ -188,7 +188,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
             String data = "SELECT DT.id_toko_penjualan_return_detail, B.nama_barang, K.nama_konversi, DT.jumlah_barang, B.harga_jual_3_barang, DT.harga_barang "
                     + "FROM toko_penjualan_detail_return DT, barang B, konversi K "
                     + "WHERE DT.kode_barang = proud_code AND DT.kode_barang_konversi = K.kode_konversi "
-                    + (search.equalsIgnoreCase("*") ? "" : "AND (B.nama_barang LIKE '%"+search+"%' OR K.nama_konversi LIKE '%"+search+"%')")+" "
+                    + (search.equalsIgnoreCase("*") ? "" : "AND B.nama_barang LIKE '%"+search+"%' ")+" "
                     + "ORDER BY id_toko_penjualan_return_detail";
             hasil = connection.ambilData(data);
             setModelTabelReturn(hasil);
@@ -553,6 +553,11 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         jScrollPane3.setViewportView(jTable3);
 
         btnSimpanPenjualan1.setText("Simpan Penjualan");
+        btnSimpanPenjualan1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanPenjualan1ActionPerformed(evt);
+            }
+        });
 
         jLabel16.setText("Total");
 
@@ -696,6 +701,10 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
             hapusBarang(idReturn.get(row).toString());
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnSimpanPenjualan1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanPenjualan1ActionPerformed
+        
+    }//GEN-LAST:event_btnSimpanPenjualan1ActionPerformed
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt){
         if(code_barang != null && (!vJumlah.getText().equalsIgnoreCase("") && !vJumlah.getText().equalsIgnoreCase("0")) && 
