@@ -26,7 +26,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Toko_ReturPenjualan extends javax.swing.JFrame {
 
-    private HashMap konversi;
+    private HashMap konversi, idReturn;
     private DefaultTableModel tabelBarang, tabelRetur;
     private ResultSet hasil;
     public Statement stmt;
@@ -38,6 +38,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         connection = new Connect();
         konversi = new HashMap();
+        idReturn = new HashMap();
         tabelBarang = new DefaultTableModel(new String[]{"No.","Kode","Nama Barang"},0);
         jTable2.setModel(tabelBarang);
         jTable2.getColumnModel().getColumn(0).setPreferredWidth(5);
@@ -184,7 +185,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     private void isiTabelReturn(String search){
         ResultSet nama_barang, harga_barang;
         try{
-            String data = "SELECT B.nama_barang, K.nama_konversi, DT.jumlah_barang, B.harga_jual_3_barang, DT.harga_barang "
+            String data = "SELECT DT.id_toko_penjualan_return_detail, B.nama_barang, K.nama_konversi, DT.jumlah_barang, B.harga_jual_3_barang, DT.harga_barang "
                     + "FROM toko_penjualan_detail_return DT, barang B, konversi K "
                     + "WHERE DT.kode_barang = proud_code AND DT.kode_barang_konversi = K.kode_konversi "
                     + (search.equalsIgnoreCase("*") ? "" : "AND (B.nama_barang LIKE '%"+search+"%' OR K.nama_konversi LIKE '%"+search+"%')")+" "
@@ -206,6 +207,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
                 String harga = hasil.getString("harga_jual_3_barang");
                 String total = hasil.getString("harga_barang");
                 tabelRetur.addRow(new Object[]{no,barang,satuan,jumlah,harga,total});
+                idReturn.put(no,hasil.getString("id_toko_penjualan_return_detail"));
                 no++;
             }
             setTotalReturn();
@@ -241,6 +243,18 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
             dPilihBarang.dispose();
         } catch(Exception e){
             System.out.println("Toko_Retur/inputTokoDetailReturn - "+e);
+        }
+    }
+    
+    private void hapusBarang(String kode){
+        try{
+            String data = "DELETE FROM toko_penjualan_detail_return "
+                    + "WHERE id_toko_penjualan_return_detail = '"+kode+"' ";
+            connection.simpanData(data);
+            deleteTabel(tabelRetur);
+            isiTabelReturn("*");
+        } catch(Exception e){
+            System.out.println("Toko_Return/hapusBarang - "+e);
         }
     }
     
@@ -674,7 +688,13 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable3MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+        int row = jTable3.getSelectedRow();
+        if(row <= -1){
+            JOptionPane.showMessageDialog(null, "Silahkan Pilih Barang yg akan dihapus");
+        } else{
+            row = row +1;
+            hapusBarang(idReturn.get(row).toString());
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt){
@@ -702,11 +722,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
             evt.consume();
         }
         
-        if(vJumlah.getText().equalsIgnoreCase("")){
-            
-        } else if(vHarga.getText().equalsIgnoreCase("")){
-            
-        } else{
+        if(!vJumlah.getText().equalsIgnoreCase("") && !vHarga.getText().equalsIgnoreCase("")){
             int harga = Integer.parseInt(vHarga.getText().toString());
             int jumlah = Integer.parseInt(vJumlah.getText().toString());
             int total = harga*jumlah;
