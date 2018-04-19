@@ -104,10 +104,7 @@ public class Toko_Transaksi extends javax.swing.JDialog {
 
     }
 
-<<<<<<< HEAD
-=======
-//<<<<<<< HEAD
->>>>>>> 5516066f83b4aea28d8c3fe4af49b2dff9fbfe0d
+
     private void setTanggal() {
         try {
             Calendar ca = new GregorianCalendar();
@@ -129,8 +126,6 @@ public class Toko_Transaksi extends javax.swing.JDialog {
         } catch (ParseException ex) {
             Logger.getLogger(Toko_Transaksi.class.getName()).log(Level.SEVERE, null, ex);
         }
-<<<<<<< HEAD
-=======
 
 
 //    private void setModel(ResultSet hasil) {
@@ -156,7 +151,6 @@ public class Toko_Transaksi extends javax.swing.JDialog {
 //            JOptionPane.showMessageDialog(null, e);
 //        }
 //>>>>>>> 9e831eb58909f076ebee3bfb9790c29de5f40a52
->>>>>>> 5516066f83b4aea28d8c3fe4af49b2dff9fbfe0d
     }
 
     @SuppressWarnings("unchecked")
