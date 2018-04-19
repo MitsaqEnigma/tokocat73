@@ -33,7 +33,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+//import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
@@ -60,8 +60,8 @@ public class Toko_Transaksi extends javax.swing.JDialog {
         initComponents();
         panelMerah.setVisible(false);
         this.connection = connection;
-        AutoCompleteDecorator.decorate(comCustomer);
-        AutoCompleteDecorator.decorate(comBarang);
+//        AutoCompleteDecorator.decorate(comCustomer);
+//        AutoCompleteDecorator.decorate(comBarang);
         setTanggal();
         loadNumberTable();
         FillComboCustomer();
@@ -108,7 +108,7 @@ public class Toko_Transaksi extends javax.swing.JDialog {
 
     }
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
     private void setTanggal() {
         try {
             Calendar ca = new GregorianCalendar();
@@ -131,8 +131,8 @@ public class Toko_Transaksi extends javax.swing.JDialog {
             Logger.getLogger(Toko_Transaksi.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-=======
-    private void setModel(ResultSet hasil) {
+
+//    private void setModel(ResultSet hasil) {
 //        try {
 //            list = new ArrayList<>();
 //            while (hasil.next()) {
@@ -154,7 +154,7 @@ public class Toko_Transaksi extends javax.swing.JDialog {
 //        } catch (SQLException e) {
 //            JOptionPane.showMessageDialog(null, e);
 //        }
->>>>>>> 9e831eb58909f076ebee3bfb9790c29de5f40a52
+//>>>>>>> 9e831eb58909f076ebee3bfb9790c29de5f40a52
     }
 
     @SuppressWarnings("unchecked")
