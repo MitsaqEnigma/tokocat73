@@ -2,7 +2,24 @@ package Java;
 
 public class ListSalesman {
     private String nama_salesman, contact_salesman, telepon_salesman, alamat_salesman, kota_salesman;
-    private int no;
+    private int no, status;
+    private double gaji;
+
+    public double getGaji() {
+        return gaji;
+    }
+
+    public void setGaji(double gaji) {
+        this.gaji = gaji;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public int getNo() {
         return no;

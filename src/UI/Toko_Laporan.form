@@ -75,9 +75,15 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
+<<<<<<< HEAD
                       <Component id="jDateChooser3" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jDateChooser4" min="-2" max="-2" attributes="0"/>
+=======
+                      <Component id="jDateChooser1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jDateChooser2" min="-2" max="-2" attributes="0"/>
+>>>>>>> 9e831eb58909f076ebee3bfb9790c29de5f40a52
                       <EmptySpace min="-2" pref="140" max="-2" attributes="0"/>
                       <Component id="btnTampilkanLapJual" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -128,9 +134,15 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCetakLapJualActionPerformed"/>
               </Events>
             </Component>
+<<<<<<< HEAD
             <Component class="com.toedter.calendar.JDateChooser" name="jDateChooser3">
             </Component>
             <Component class="com.toedter.calendar.JDateChooser" name="jDateChooser4">
+=======
+            <Component class="com.toedter.calendar.JDateChooser" name="jDateChooser1">
+            </Component>
+            <Component class="com.toedter.calendar.JDateChooser" name="jDateChooser2">
+>>>>>>> 9e831eb58909f076ebee3bfb9790c29de5f40a52
             </Component>
           </SubComponents>
         </Container>

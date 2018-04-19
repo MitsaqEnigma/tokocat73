@@ -224,7 +224,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextField90KeyTyped"/>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextField90KeyReleased"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel184">
@@ -243,9 +243,9 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel45" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
-                  <Component id="jLabel46" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblTanggal" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
-                  <Component id="jLabel47" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblWaktu" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -257,8 +257,8 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabel45" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                          <Component id="jLabel46" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel47" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTanggal" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblWaktu" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -278,7 +278,7 @@
             <Property name="text" type="java.lang.String" value="Salesman Form"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel47">
+        <Component class="javax.swing.JLabel" name="lblWaktu">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="14" style="0"/>
@@ -289,7 +289,7 @@
             <Property name="text" type="java.lang.String" value="waktu"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel46">
+        <Component class="javax.swing.JLabel" name="lblTanggal">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="14" style="0"/>
