@@ -923,9 +923,9 @@ public class Awal extends javax.swing.JFrame {
     }//GEN-LAST:event_SalesmanActionPerformed
 
     private void CustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CustomerActionPerformed
-       Master_Customer cus=new Master_Customer();
+       Master_Customer cus=new Master_Customer(this, rootPaneCheckingEnabled, connection);
+       cus.setLocationRelativeTo(this);
        cus.setVisible(true);
-       cus.setFocusable(true);
     }//GEN-LAST:event_CustomerActionPerformed
 
     private void TOPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TOPActionPerformed
@@ -989,9 +989,9 @@ public class Awal extends javax.swing.JFrame {
     }//GEN-LAST:event_LaporanTokoActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        Master_LaporanKunjungan lk=new Master_LaporanKunjungan();
+        Master_LaporanKunjungan lk=new Master_LaporanKunjungan(this, rootPaneCheckingEnabled, connection);
+        lk.setLocationRelativeTo(this);
         lk.setVisible(true);
-        lk.setLocationRelativeTo(null);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
