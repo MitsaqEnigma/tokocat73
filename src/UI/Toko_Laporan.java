@@ -88,8 +88,8 @@ public class Toko_Laporan extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         btnTampilkanLapJual = new javax.swing.JButton();
         btnCetakLapJual = new javax.swing.JButton();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jDateChooser2 = new com.toedter.calendar.JDateChooser();
+        jDateChooser3 = new com.toedter.calendar.JDateChooser();
+        jDateChooser4 = new com.toedter.calendar.JDateChooser();
         jPanel6 = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
@@ -121,20 +121,16 @@ public class Toko_Laporan extends javax.swing.JFrame {
             }
         });
 
-        jDateChooser1.setDateFormatString("yyyy-MM-dd");
-
-        jDateChooser2.setDateFormatString("yyyy-MM-dd ");
-
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8)
+                .addComponent(jDateChooser3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jDateChooser4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(140, 140, 140)
                 .addComponent(btnTampilkanLapJual)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCetakLapJual)
@@ -146,10 +142,10 @@ public class Toko_Laporan extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jDateChooser4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jDateChooser3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(5, 5, 5)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -302,14 +298,14 @@ public class Toko_Laporan extends javax.swing.JFrame {
 
     private void btnTampilkanLapJualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTampilkanLapJualActionPerformed
 
-        if (jDateChooser1.getDate()== null) {
+        if (jDateChooser3.getDate()== null) {
             JOptionPane.showMessageDialog(rootPane, "Silahkan Input tanggal 1");
         }
-        if (jDateChooser2.getDate()== null) {
+        if (jDateChooser4.getDate()== null) {
             JOptionPane.showMessageDialog(rootPane, "Silahkan Input tanggal 2");
         } else {
-            String vSearch1 = SDF.format(jDateChooser1.getDate());
-            String vSearch2 = SDF.format(jDateChooser2.getDate());
+            String vSearch1 = SDF.format(jDateChooser3.getDate());
+            String vSearch2 = SDF.format(jDateChooser4.getDate());
             tampilTabelSearch(vSearch1, vSearch2);
         }
     }//GEN-LAST:event_btnTampilkanLapJualActionPerformed
@@ -420,8 +416,8 @@ public class Toko_Laporan extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCetakLapJual;
     private javax.swing.JButton btnTampilkanLapJual;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
-    private com.toedter.calendar.JDateChooser jDateChooser2;
+    private com.toedter.calendar.JDateChooser jDateChooser3;
+    private com.toedter.calendar.JDateChooser jDateChooser4;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel20;
