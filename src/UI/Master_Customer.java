@@ -353,7 +353,9 @@ public class Master_Customer extends javax.swing.JDialog {
     private void jLabel19MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel19MouseClicked
 //        listCustomer = list.get(jTable7.getSelectedRow());
         listCustomer = (ListCustomer) myarrlist.getLc().get(jTable7.getSelectedRow());
-        Master_Customer_NewEdit mcne = new Master_Customer_NewEdit(new Awal(rootPaneCheckingEnabled), rootPaneCheckingEnabled, listCustomer, true);
+        listSalesman = (ListSalesman) myarrlist.getLs().get(jTable7.getSelectedRow());
+        Object[] temp = {listCustomer, listSalesman};
+        Master_Customer_NewEdit mcne = new Master_Customer_NewEdit(new Awal(rootPaneCheckingEnabled), rootPaneCheckingEnabled, temp, true);
         mcne.setLocationRelativeTo(new Awal(rootPaneCheckingEnabled));
         mcne.setVisible(true);
     }//GEN-LAST:event_jLabel19MouseClicked

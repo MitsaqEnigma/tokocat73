@@ -1,11 +1,13 @@
 package UI;
 
 import Java.ListCustomer;
+import Java.ListSalesman;
 
 public class Master_Customer_NewEdit extends javax.swing.JDialog {
     
 //    Object
     private ListCustomer listCustomer;
+    private ListSalesman listSalesman;
 //    Var
     private boolean isEdit = false;
     private int id;
@@ -14,12 +16,11 @@ public class Master_Customer_NewEdit extends javax.swing.JDialog {
         initComponents();
     }
 
-    public Master_Customer_NewEdit(java.awt.Frame parent, boolean modal, ListCustomer listCustomer, boolean isEdit) {
+    public Master_Customer_NewEdit(java.awt.Frame parent, boolean modal, Object[] list, boolean isEdit) {
         super(parent, modal);
         initComponents();
 //        code here
         this.isEdit = isEdit;
-        this.listCustomer = listCustomer;
         setContent();
     }
 
