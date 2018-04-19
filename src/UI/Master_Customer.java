@@ -73,8 +73,7 @@ public class Master_Customer extends javax.swing.JDialog {
                 this.listCustomer.setTelepon_customer(hasil.getString("telepon_customer"));
                 this.listCustomer.setContact_customer(hasil.getString("contact_customer"));
                 this.listCustomer.setHari_tagihan(hasil.getString("hari_tagihan"));
-                this.listCustomer.setStatus_customer(hasil.getInt("status_customer"));
-                this.listCustomer.setKode_salesman(hasil.getInt("kode_salesman"));
+                this.listCustomer.setStatus_customer(hasil.getString("status_customer"));
                 this.myarrlist.getLc().add(listCustomer);
                 listCustomer = null;
 
