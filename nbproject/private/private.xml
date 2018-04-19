@@ -3,15 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/C:/Users/Enigma/Documents/NetBeansProjects/tokocat73/src/UI/Awal.java</file>
-            <file>file:/C:/Users/Enigma/Documents/NetBeansProjects/tokocat73/src/UI/Master_Customer_NewEdit.java</file>
-            <file>file:/C:/Users/Enigma/Documents/NetBeansProjects/tokocat73/src/UI/Master_Salesman.java</file>
-            <file>file:/C:/Users/Enigma/Documents/NetBeansProjects/tokocat73/src/UI/Master_Customer.java</file>
-=======
-            <file>file:/C:/Users/Bisma/Documents/NetBeansProjects/tokocat73/src/Java/Connect.java</file>
-            <file>file:/C:/Users/Bisma/Documents/NetBeansProjects/tokocat73/src/UI/Toko_ReturPenjualan.java</file>
->>>>>>> cdc5fe6dbaf5d721830ad17879e180452bef9bd0
+            <file>file:/C:/Users/Bisma/Documents/NetBeansProjects/tokocat73/src/Java/ListCustomer.java</file>
+            <file>file:/C:/Users/Bisma/Documents/NetBeansProjects/tokocat73/src/UI/Toko_Laporan.java</file>
+            <file>file:/C:/Users/Bisma/Documents/NetBeansProjects/tokocat73/src/UI/Master_Customer_NewEdit.java</file>
+            <file>file:/C:/Users/Bisma/Documents/NetBeansProjects/tokocat73/src/UI/Toko_Transaksi.java</file>
         </group>
     </open-files>
 </project-private>

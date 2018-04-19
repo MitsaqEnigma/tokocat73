@@ -971,9 +971,9 @@ public class Awal extends javax.swing.JFrame {
     }//GEN-LAST:event_BarangActionPerformed
 
     private void TransaksiiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TransaksiiActionPerformed
-        Toko_Transaksi x = new Toko_Transaksi();
+        Toko_Transaksi x = new Toko_Transaksi(this, rootPaneCheckingEnabled, connection);
+        x.setLocationRelativeTo(this);
         x.setVisible(true);
-        x.setFocusable(true);
     }//GEN-LAST:event_TransaksiiActionPerformed
 
     private void ReturTransaksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReturTransaksiActionPerformed

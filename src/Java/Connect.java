@@ -55,7 +55,7 @@ public class Connect {
             Connect();
             rs = st.executeQuery(sql);
         } catch (SQLException x) {
-            JOptionPane.showMessageDialog(null, "Ambil Data Gagal, Pesan error : \n" + x);
+            System.out.println(x.toString());
         }
         return rs;
     }
