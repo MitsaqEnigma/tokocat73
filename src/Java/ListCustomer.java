@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package Java;
 
 public class ListCustomer {
@@ -84,3 +85,5 @@ public class ListCustomer {
         this.hari_tagihan = hari_tagihan;
     }
 }
+=======
+>>>>>>> 5349a856f7e20ce96db01241ea9806b73e3ba408
