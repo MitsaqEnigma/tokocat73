@@ -35,10 +35,6 @@ import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
-/**
- *
- * @author Dii
- */
 public class Toko_Transaksi extends javax.swing.JDialog {
 
     private ArrayList<ListTokoTransaksi> list;
@@ -108,7 +104,6 @@ public class Toko_Transaksi extends javax.swing.JDialog {
 
     }
 
-<<<<<<< HEAD
     private void setTanggal() {
         try {
             Calendar ca = new GregorianCalendar();
@@ -130,31 +125,6 @@ public class Toko_Transaksi extends javax.swing.JDialog {
         } catch (ParseException ex) {
             Logger.getLogger(Toko_Transaksi.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-=======
-    private void setModel(ResultSet hasil) {
-//        try {
-//            list = new ArrayList<>();
-//            while (hasil.next()) {
-//                this.listBarang = new ListBarang();
-//                this.listBarang(hasil.getInt("kode_pegawai"));
-//                this.listPegawai.setKode_unik(hasil.getInt("kode_unik"));
-//                this.listPegawai.setNama_pegawai(hasil.getString("nama_pegawai"));
-//                this.listPegawai.setKode_lokasi(hasil.getString("nama_lokasi"));
-//                this.listPegawai.setAlamat_pegawai(hasil.getString("alamat_pegawai"));
-//                this.listPegawai.setKota_pegawai(hasil.getString("kota_pegawai"));
-//                this.listPegawai.setTelepon_pegawai(hasil.getString("telepon_pegawai"));
-//                this.listPegawai.setContact_pegawai(hasil.getString("contact_pegawai"));
-//                this.listPegawai.setStatus_pegawai(hasil.getInt("status_pegawai"));
-//                list.add(listPegawai);
-//                listPegawai = null;
-//            }
-//            model = new modelTabelPegawai(list);
-//            jTable6.setModel(model);
-//        } catch (SQLException e) {
-//            JOptionPane.showMessageDialog(null, e);
-//        }
->>>>>>> 9e831eb58909f076ebee3bfb9790c29de5f40a52
     }
 
     @SuppressWarnings("unchecked")
@@ -861,14 +831,14 @@ public class Toko_Transaksi extends javax.swing.JDialog {
             while (rs.next()) {
                 String id = rs.getString(1);
                 String id_lama = rs.getString(2);
-                String id_pround = rs.getString(3);
+                String harga = rs.getString("harga_rata_rata_barang");
 
                 int selectedRow = jTableTransaksi.getSelectedRow();
                 if (selectedRow != -1) {
                     jTableTransaksi.setValueAt(id, selectedRow, 1);
                     jTableTransaksi.setValueAt(id_lama, selectedRow, 3);
                     jTableTransaksi.setValueAt(0, selectedRow, 4);
-                    jTableTransaksi.setValueAt(id_pround, selectedRow, 6);
+                    jTableTransaksi.setValueAt(harga, selectedRow, 6);
                 }
             }
         } catch (Exception e) {
@@ -910,17 +880,15 @@ public class Toko_Transaksi extends javax.swing.JDialog {
                 harga = Integer.parseInt(tabelModel.getValueAt(i, 6).toString());
                 int subtotal = jumlah*harga;
                 tabelModel.setValueAt(subtotal, i, 7);
-                
+               
                 totalBiaya = totalBiaya + (jumlah * harga);
-
                 qty += jumlah;
-
             }
             if (harga == 0) {
                 JOptionPane.showMessageDialog(null, "Data Terakhir Tidak Boleh kosong");
             } else {
                 jTotal.setText("" + totalBiaya);
-                model.addRow(new Object[]{"", "", "", "", "1", "", "0"});
+                model.addRow(new Object[]{"", "", "", "", "0", "", "0"});
             }
         }
         loadNumberTable();
