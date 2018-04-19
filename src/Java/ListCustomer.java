@@ -1,5 +1,6 @@
 package Java;
 
+<<<<<<< HEAD
 /**
  *
  * @author Miracle
@@ -8,6 +9,11 @@ public class ListCustomer {
     private int kode_customer, status_customer;
     private String nama_customer,kota_customer, alamat_customer, provinsi_customer, telepon_customer, contact_customer, hari_tagihan, kode_salesman;
 
+=======
+public class ListCustomer {
+    private int kode_customer, status_customer, kode_salesman;
+    private String nama_customer, kota_customer, alamat_customer, provinsi_customer, telepon_customer, contact_customer, hari_tagihan;
+>>>>>>> 5516066f83b4aea28d8c3fe4af49b2dff9fbfe0d
 
     public int getKode_customer() {
         return kode_customer;
@@ -25,6 +31,17 @@ public class ListCustomer {
         this.status_customer = status_customer;
     }
 
+<<<<<<< HEAD
+=======
+    public int getKode_salesman() {
+        return kode_salesman;
+    }
+
+    public void setKode_salesman(int kode_salesman) {
+        this.kode_salesman = kode_salesman;
+    }
+
+>>>>>>> 5516066f83b4aea28d8c3fe4af49b2dff9fbfe0d
     public String getNama_customer() {
         return nama_customer;
     }
@@ -80,6 +97,7 @@ public class ListCustomer {
     public void setHari_tagihan(String hari_tagihan) {
         this.hari_tagihan = hari_tagihan;
     }
+<<<<<<< HEAD
 
     public String getKode_salesman() {
         return kode_salesman;
@@ -89,4 +107,6 @@ public class ListCustomer {
         this.kode_salesman = kode_salesman;
     }
 
+=======
+>>>>>>> 5516066f83b4aea28d8c3fe4af49b2dff9fbfe0d
 }
