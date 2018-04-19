@@ -75,10 +75,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jDateChooser1" min="-2" pref="161" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jDateChooser2" min="-2" pref="161" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                      <Component id="jDateChooser1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jDateChooser2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="140" max="-2" attributes="0"/>
                       <Component id="btnTampilkanLapJual" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnCetakLapJual" min="-2" max="-2" attributes="0"/>
@@ -129,14 +129,8 @@
               </Events>
             </Component>
             <Component class="com.toedter.calendar.JDateChooser" name="jDateChooser1">
-              <Properties>
-                <Property name="dateFormatString" type="java.lang.String" value="yyyy-MM-dd"/>
-              </Properties>
             </Component>
             <Component class="com.toedter.calendar.JDateChooser" name="jDateChooser2">
-              <Properties>
-                <Property name="dateFormatString" type="java.lang.String" value="yyyy-MM-dd "/>
-              </Properties>
             </Component>
           </SubComponents>
         </Container>

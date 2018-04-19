@@ -32,7 +32,7 @@ public class Master_Pegawai extends javax.swing.JDialog {
         tampilTabel("*");
     }
 
-    private String tampilTabel(String param) {
+    private void tampilTabel(String param) {
         String data = "";
         try {
             data = "SELECT kode_pegawai, kode_unik, nama_lokasi, nama_pegawai, alamat_pegawai, kota_pegawai, telepon_pegawai,contact_pegawai, status_pegawai "
@@ -48,7 +48,6 @@ public class Master_Pegawai extends javax.swing.JDialog {
         } finally {
 //            System.out.println(data);
         }
-        return data;
     }
 
     private void setModel(ResultSet hasil) {
@@ -201,11 +200,6 @@ public class Master_Pegawai extends javax.swing.JDialog {
 
         jLabel1.setText("Kriteria");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 jTextField1KeyTyped(evt);
@@ -394,7 +388,6 @@ public class Master_Pegawai extends javax.swing.JDialog {
                 System.out.println("Master_Pegawai_Line_360_" + e.toString());
             }
         }
-
 //        tp.setLocationRelativeTo(null);
     }//GEN-LAST:event_jLabel3MouseClicked
 
@@ -427,10 +420,6 @@ public class Master_Pegawai extends javax.swing.JDialog {
     private void jTextField1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyTyped
         tampilTabel(jTextField1.getText());
     }//GEN-LAST:event_jTextField1KeyTyped
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

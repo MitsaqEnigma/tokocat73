@@ -1,10 +1,10 @@
 package UI;
 
 import Java.*;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class Master_Salesman extends javax.swing.JDialog {
@@ -13,7 +13,9 @@ public class Master_Salesman extends javax.swing.JDialog {
     private ListSalesman listSalesman;
     private DefaultTableModel tabel;
     private ResultSet hasil;
+    private PreparedStatement PS;
     private Connect connection;
+    private Clock clock;
     private int dd;
 
     public Master_Salesman() {
@@ -28,10 +30,12 @@ public class Master_Salesman extends javax.swing.JDialog {
     public Master_Salesman(java.awt.Frame parent, boolean modal, Connect connection) {
         super(parent, modal);
         initComponents();
+        clock = new Clock(lblWaktu, 1);
+        clock = new Clock(lblTanggal, 0);
         this.connection = connection;
 //        code here
         jTable9.setModel(new DefaultTableModel(new String[]{"No", "Nama", "Contact", "Telepon", "Alamat", "Kota"}, 0));
-        tampilTabel(1);
+        tampilTabel("1");
     }
 
     private void deleteTabel() {
@@ -40,10 +44,11 @@ public class Master_Salesman extends javax.swing.JDialog {
         }
     }
 
-    public String tampilTabel(int aktif) {
-        String data = "SELECT kode_salesman, nama_salesman, contact_salesman, telepon_salesman, alamat, kota_salesman "
+    public String tampilTabel(String param) {
+        String data = "SELECT kode_salesman, nama_salesman, contact_salesman, telepon_salesman, alamat, kota_salesman, aktif_sales, gaji_salesman "
                 + "FROM salesman "
-                + (aktif != -1 ? "WHERE aktif_sales = " + aktif + "" : "") + "";
+                + (param.equals("-1") ? "" : (param.equals("1") || param.equals("0") ? "WHERE aktif_sales = " + Integer.parseInt(param) : "WHERE nama_salesman like '%" + param + "%'"));
+//        System.out.println(data);
         try {
             hasil = connection.ambilData(data);
             setModel(hasil);
@@ -67,9 +72,12 @@ public class Master_Salesman extends javax.swing.JDialog {
                 listSalesman.setTelepon_salesman(hasil.getString("telepon_salesman"));
                 listSalesman.setAlamat_salesman(hasil.getString("alamat"));
                 listSalesman.setKota_salesman(hasil.getString("kota_salesman"));
+                listSalesman.setStatus(hasil.getInt("aktif_sales"));
+                listSalesman.setGaji(hasil.getDouble("gaji_salesman"));
                 list.add(listSalesman);
                 tabel.addRow(new Object[]{
                     listSalesman.getNo(),
+                    listSalesman.getNama_salesman(),
                     listSalesman.getContact_salesman(),
                     listSalesman.getTelepon_salesman(),
                     listSalesman.getAlamat_salesman(),
@@ -79,9 +87,66 @@ public class Master_Salesman extends javax.swing.JDialog {
                 listSalesman = null;
             }
         } catch (SQLException e) {
-            System.out.println("Master_Salesman_Line_56_" + e.toString());
+            System.out.println("Master_Salesman_Line_59_" + e.toString());
         } finally {
             jTable9.setModel(tabel);
+        }
+    }
+
+    private int getNewId() {
+        String sql = "SELECT kode_salesman FROM salesman ORDER BY kode_salesman DESC LIMIT 1";
+        int id = 0;
+        try {
+            hasil = connection.ambilData(sql);
+            while (hasil.next()) {
+                id = hasil.getInt("kode_salesman") + 1;
+            }
+        } catch (SQLException e) {
+        }
+        return id;
+    }
+
+    private void insertData(ListSalesman listSalesman) {
+        PS = null;
+        if (listSalesman.getNo() != 0) {
+            try {
+                String sql = "insert into salesman values (?,?,?,?,?,?,?,?,?,?)";
+                PS = connection.Connect().prepareStatement(sql);
+                PS.setInt(1, listSalesman.getNo());
+                PS.setString(2, listSalesman.getNama_salesman());
+                PS.setString(3, listSalesman.getAlamat_salesman());
+                PS.setString(4, listSalesman.getKota_salesman());
+                PS.setString(5, listSalesman.getTelepon_salesman());
+                PS.setString(6, listSalesman.getContact_salesman());
+                PS.setInt(7, listSalesman.getStatus());
+                PS.setString(8, "");
+                PS.setString(9, "");
+                PS.setDouble(10, listSalesman.getGaji());
+                PS.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println("Master_Salesman_Line_105_" + e.toString());
+            }
+        }
+    }
+
+    private void updateData(ListSalesman listSalesman) {
+        PS = null;
+        try {
+            String sql = "update salesman set nama_salesman=?,alamat=?,kota_salesman=?,telepon_salesman=?,contact_salesman=?,"
+                    + "aktif_sales=?,gaji_salesman=?"
+                    + "where kode_salesman=?";
+            PS = connection.Connect().prepareStatement(sql);
+            PS.setString(1, listSalesman.getNama_salesman());
+            PS.setString(2, listSalesman.getAlamat_salesman());
+            PS.setString(3, listSalesman.getKota_salesman());
+            PS.setString(4, listSalesman.getTelepon_salesman());
+            PS.setString(5, listSalesman.getContact_salesman());
+            PS.setInt(6, listSalesman.getStatus());
+            PS.setDouble(7, listSalesman.getGaji());
+            PS.setInt(8, listSalesman.getNo());
+            PS.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Master_Salesman_Line_126_" + e.toString());
         }
     }
 
@@ -100,8 +165,8 @@ public class Master_Salesman extends javax.swing.JDialog {
         jLabel184 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel45 = new javax.swing.JLabel();
-        jLabel47 = new javax.swing.JLabel();
-        jLabel46 = new javax.swing.JLabel();
+        lblWaktu = new javax.swing.JLabel();
+        lblTanggal = new javax.swing.JLabel();
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -169,8 +234,8 @@ public class Master_Salesman extends javax.swing.JDialog {
 
         jTextField90.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cari", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
         jTextField90.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField90KeyTyped(evt);
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField90KeyReleased(evt);
             }
         });
 
@@ -234,13 +299,13 @@ public class Master_Salesman extends javax.swing.JDialog {
         jLabel45.setForeground(new java.awt.Color(49, 112, 143));
         jLabel45.setText("Salesman Form");
 
-        jLabel47.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel47.setForeground(new java.awt.Color(49, 112, 143));
-        jLabel47.setText("waktu");
+        lblWaktu.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblWaktu.setForeground(new java.awt.Color(49, 112, 143));
+        lblWaktu.setText("waktu");
 
-        jLabel46.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel46.setForeground(new java.awt.Color(49, 112, 143));
-        jLabel46.setText("tanggal");
+        lblTanggal.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblTanggal.setForeground(new java.awt.Color(49, 112, 143));
+        lblTanggal.setText("tanggal");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -250,9 +315,9 @@ public class Master_Salesman extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLabel45)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel46)
+                .addComponent(lblTanggal)
                 .addGap(57, 57, 57)
-                .addComponent(jLabel47)
+                .addComponent(lblWaktu)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -262,8 +327,8 @@ public class Master_Salesman extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel45)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel46)
-                        .addComponent(jLabel47)))
+                        .addComponent(lblTanggal)
+                        .addComponent(lblWaktu)))
                 .addContainerGap())
         );
 
@@ -292,13 +357,23 @@ public class Master_Salesman extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton33ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton33ActionPerformed
-        Master_Salesman_TambahSalesman ts = new Master_Salesman_TambahSalesman();
+        listSalesman = list.get(jTable9.getSelectedRow());
+        Master_Salesman_TambahSalesman ts = new Master_Salesman_TambahSalesman(new Awal(rootPaneCheckingEnabled), rootPaneCheckingEnabled, listSalesman, true);
+        ts.setLocationRelativeTo(this);
         ts.setVisible(true);
+        updateData(listSalesman);
+        listSalesman = null;
+        tampilTabel("1");
+        jTable9.clearSelection();
     }//GEN-LAST:event_jButton33ActionPerformed
 
     private void jButton29ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton29ActionPerformed
-        Master_Salesman_TambahSalesman ts = new Master_Salesman_TambahSalesman();
+        listSalesman = new ListSalesman();
+        Master_Salesman_TambahSalesman ts = new Master_Salesman_TambahSalesman(new Awal(rootPaneCheckingEnabled), rootPaneCheckingEnabled, listSalesman, getNewId());
+        ts.setLocationRelativeTo(this);
         ts.setVisible(true);
+        insertData(listSalesman);
+        tampilTabel("1");
     }//GEN-LAST:event_jButton29ActionPerformed
 
     private void jButton34ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton34ActionPerformed
@@ -311,22 +386,22 @@ public class Master_Salesman extends javax.swing.JDialog {
         deleteTabel();
         switch (dd) {
             case 0:
-                tampilTabel(1);
+                tampilTabel("1");
                 break;
             case 1:
-                tampilTabel(0);
+                tampilTabel("0");
                 break;
             case 2:
-                tampilTabel(-1);
+                tampilTabel("-1");
                 break;
             default:
                 break;
         }
     }//GEN-LAST:event_jComboBox7PopupMenuWillBecomeInvisible
 
-    private void jTextField90KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField90KeyTyped
-
-    }//GEN-LAST:event_jTextField90KeyTyped
+    private void jTextField90KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField90KeyReleased
+        tampilTabel(jTextField90.getText());
+    }//GEN-LAST:event_jTextField90KeyReleased
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -367,12 +442,12 @@ public class Master_Salesman extends javax.swing.JDialog {
     private javax.swing.JComboBox<String> jComboBox7;
     private javax.swing.JLabel jLabel184;
     private javax.swing.JLabel jLabel45;
-    private javax.swing.JLabel jLabel46;
-    private javax.swing.JLabel jLabel47;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JTable jTable9;
     private javax.swing.JTextField jTextField90;
+    private javax.swing.JLabel lblTanggal;
+    private javax.swing.JLabel lblWaktu;
     // End of variables declaration//GEN-END:variables
 }

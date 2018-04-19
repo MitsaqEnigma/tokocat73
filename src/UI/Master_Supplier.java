@@ -30,21 +30,20 @@ public class Master_Supplier extends javax.swing.JDialog {
         initComponents();
 //        prep
         this.connection = connection;
-        tampilTabel(1);
+        tampilTabel("1");
     }
 
-    private String tampilTabel(int id) {
+    private void tampilTabel(String param) {
         String datax = "";
         try {
             datax = "SELECT * "
                     + "from supplier "
-                    + "" + (id == -1 ? "" : "where aktif_supplier='" + id + "' ") + "";
+                    + "" + (param.equals("-1") ? "" : (param.equals("1") || param.equals("0") ? "where aktif_supplier=" + Integer.parseInt(param) : "where nama_supplier like '%" + param + "%' ") );
             hasil = connection.ambilData(datax);
             setModel(hasil);
         } catch (Exception e) {
             System.out.println("Error tampil tabel");
         }
-        return datax;
     }
 
     private void updateData(int kodeSupplier) {
@@ -70,7 +69,7 @@ public class Master_Supplier extends javax.swing.JDialog {
         } catch (SQLException e) {
             System.out.println("Master_Supplier_Line_50_" + e.toString());
         } finally {
-            tampilTabel(-1);
+            tampilTabel("-1");
         }
     }
 
@@ -96,7 +95,7 @@ public class Master_Supplier extends javax.swing.JDialog {
             } catch (SQLException e) {
                 System.out.println("Master_Supplier_Line_75_" + e.toString());
             } finally {
-                tampilTabel(-1);
+                tampilTabel("-1");
             }
         }
     }
@@ -111,7 +110,7 @@ public class Master_Supplier extends javax.swing.JDialog {
         } catch (SQLException e) {
             System.out.println("Master_Supplier_Line_75_" + e.toString());
         } finally {
-            tampilTabel(-1);
+            tampilTabel("-1");
         }
     }
 
@@ -261,6 +260,11 @@ public class Master_Supplier extends javax.swing.JDialog {
         );
 
         jTextField14.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.lightGray, java.awt.Color.gray, java.awt.Color.lightGray, java.awt.Color.lightGray));
+        jTextField14.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField14KeyReleased(evt);
+            }
+        });
 
         jLabel20.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Gambar/if_manilla-folder-new_23456.png"))); // NOI18N
@@ -417,13 +421,13 @@ public class Master_Supplier extends javax.swing.JDialog {
         comboBox = jComboBox4.getSelectedItem().toString();
         switch (jComboBox4.getSelectedIndex()) {
             case 0:
-                tampilTabel(1);
+                tampilTabel("1");
                 break;
             case 1:
-                tampilTabel(0);
+                tampilTabel("0");
                 break;
             default:
-                tampilTabel(-1);
+                tampilTabel("-1");
                 break;
         }
     }//GEN-LAST:event_jComboBox4ActionPerformed
@@ -437,6 +441,10 @@ public class Master_Supplier extends javax.swing.JDialog {
     private void jLabel22MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel22MouseClicked
         deleteData(listSupplier);
     }//GEN-LAST:event_jLabel22MouseClicked
+
+    private void jTextField14KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField14KeyReleased
+        tampilTabel(jTextField14.getText());
+    }//GEN-LAST:event_jTextField14KeyReleased
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
