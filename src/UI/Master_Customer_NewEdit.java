@@ -21,6 +21,8 @@ public class Master_Customer_NewEdit extends javax.swing.JDialog {
         initComponents();
 //        code here
         this.isEdit = isEdit;
+        listCustomer = (ListCustomer) list[0];
+        listSalesman = (ListSalesman) list[1];
         setContent();
     }
 
