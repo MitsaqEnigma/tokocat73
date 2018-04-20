@@ -33,7 +33,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
-//import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 public class Toko_Transaksi extends javax.swing.JDialog {
 
@@ -46,6 +46,8 @@ public class Toko_Transaksi extends javax.swing.JDialog {
     private TableModel model;
     private ResultSet hasil, hasil1;
     private boolean merahAktif = false;
+    private String id;
+    private int harga, jumlah;
 
     public Toko_Transaksi() {
         initComponents();
@@ -56,8 +58,8 @@ public class Toko_Transaksi extends javax.swing.JDialog {
         initComponents();
         panelMerah.setVisible(false);
         this.connection = connection;
-//        AutoCompleteDecorator.decorate(comCustomer);
-//        AutoCompleteDecorator.decorate(comBarang);
+        AutoCompleteDecorator.decorate(comCustomer);
+        AutoCompleteDecorator.decorate(comBarang);
         setTanggal();
         loadNumberTable();
         FillComboCustomer();
@@ -103,7 +105,7 @@ public class Toko_Transaksi extends javax.swing.JDialog {
         }
 
     }
-    
+
     private void setTanggal() {
         try {
             Calendar ca = new GregorianCalendar();
@@ -125,29 +127,6 @@ public class Toko_Transaksi extends javax.swing.JDialog {
         } catch (ParseException ex) {
             Logger.getLogger(Toko_Transaksi.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-//    private void setModel(ResultSet hasil) {
-//        try {
-//            list = new ArrayList<>();
-//            while (hasil.next()) {
-//                this.listBarang = new ListBarang();
-//                this.listBarang(hasil.getInt("kode_pegawai"));
-//                this.listPegawai.setKode_unik(hasil.getInt("kode_unik"));
-//                this.listPegawai.setNama_pegawai(hasil.getString("nama_pegawai"));
-//                this.listPegawai.setKode_lokasi(hasil.getString("nama_lokasi"));
-//                this.listPegawai.setAlamat_pegawai(hasil.getString("alamat_pegawai"));
-//                this.listPegawai.setKota_pegawai(hasil.getString("kota_pegawai"));
-//                this.listPegawai.setTelepon_pegawai(hasil.getString("telepon_pegawai"));
-//                this.listPegawai.setContact_pegawai(hasil.getString("contact_pegawai"));
-//                this.listPegawai.setStatus_pegawai(hasil.getInt("status_pegawai"));
-//                list.add(listPegawai);
-//                listPegawai = null;
-//            }
-//            model = new modelTabelPegawai(list);
-//            jTable6.setModel(model);
-//        } catch (SQLException e) {
-//            JOptionPane.showMessageDialog(null, e);
-//        }
     }
 
     @SuppressWarnings("unchecked")
@@ -848,18 +827,20 @@ public class Toko_Transaksi extends javax.swing.JDialog {
 
     private void comBarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comBarangActionPerformed
         try {
-            String sql = "select * from barang where nama_barang = '" + comBarang.getSelectedItem() + "'";
+            String sql = "select b.kode_barang, b.nama_barang, b.harga_jual_1_barang, "
+                    + "b.harga_jual_2_barang, b.harga_jual_3_barang, b.harga_rata_rata_barang, "
+                    + "bl.jumlah from barang b, barang_lokasi bl, lokasi l where b.kode_barang = bl.kode_barang and "
+                    + "bl.kode_lokasi = l.kode_lokasi and l.nama_lokasi='toko' and b.nama_barang = '" + comBarang.getSelectedItem() + "'";
             PS = connection.Connect().prepareStatement(sql);
             rs = PS.executeQuery();
             while (rs.next()) {
-                String id = rs.getString(1);
-                String id_lama = rs.getString(2);
-                String harga = rs.getString("harga_rata_rata_barang");
-
+                id = rs.getString(1);
+                jumlah = rs.getInt(7);
+                harga = rs.getInt(6);
                 int selectedRow = jTableTransaksi.getSelectedRow();
                 if (selectedRow != -1) {
                     jTableTransaksi.setValueAt(id, selectedRow, 1);
-                    jTableTransaksi.setValueAt(id_lama, selectedRow, 3);
+                    jTableTransaksi.setValueAt(jumlah, selectedRow, 3);
                     jTableTransaksi.setValueAt(0, selectedRow, 4);
                     jTableTransaksi.setValueAt(harga, selectedRow, 6);
                 }
@@ -894,16 +875,16 @@ public class Toko_Transaksi extends javax.swing.JDialog {
         int jumlah = 0, harga = 0;
         int qty = 0;
         TableModel tabelModel;
-
+        
         if (evt.getKeyCode() == KeyEvent.VK_ENTER || evt.getKeyCode() == KeyEvent.VK_DOWN) {    // Membuat Perintah Saat Menekan Enter
 
             tabelModel = jTableTransaksi.getModel();
             for (int i = 0; i < baris; i++) {
                 jumlah = Integer.parseInt(tabelModel.getValueAt(i, 4).toString());
                 harga = Integer.parseInt(tabelModel.getValueAt(i, 6).toString());
-                int subtotal = jumlah*harga;
+                int subtotal = jumlah * harga;
                 tabelModel.setValueAt(subtotal, i, 7);
-               
+
                 totalBiaya = totalBiaya + (jumlah * harga);
                 qty += jumlah;
             }
@@ -911,8 +892,10 @@ public class Toko_Transaksi extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(null, "Data Terakhir Tidak Boleh kosong");
             } else {
                 jTotal.setText("" + totalBiaya);
+
                 model.addRow(new Object[]{"", "", "", "", "0", "", "0"});
             }
+
         }
         loadNumberTable();
         // TODO add your handling code here:
