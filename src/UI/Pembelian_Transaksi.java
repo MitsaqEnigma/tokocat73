@@ -1064,15 +1064,22 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
         if (tbl_Pembelian.getRowCount() >= 0) {
 
+<<<<<<< HEAD
             int baris = tbl_Pembelian.getRowCount();
             int subtotal1 = 0, hargajadi1 = 0, diskonke21 = 0, totalqty = 0, total = 0, diskon = 0, diskonp1 = 0, diskonp11, diskonp21 = 0; //penjumlahan
             int jumlah = 0, harga = 0, subtotal = 0, diskonp = 0, diskonrp = 0, diskonp2 = 0, diskonrp2 = 0, hargajadi = 0;//panggil colom tabel
+=======
+            float baris = tbl_Pembelian.getRowCount();
+            float subtotal1 = 0, hargajadi1 = 0, diskonke21 = 0, totalqty = 0,total = 0, diskon = 0, diskonp1 = 0,diskonp11, diskonp21= 0; //penjumlahan
+            float jumlah = 0, harga = 0, subtotal = 0, diskonp =0, diskonrp=0, diskonp2=0, diskonrp2=0, hargajadi=0;//panggil colom tabel
+>>>>>>> 83d2dddbcff2c25207af0848a9edb16ebd815d82
             float qty = 0;
             TableModel tabelModel;
             tabelModel = tbl_Pembelian.getModel();
             int i = 0;
 
             for (i = 0; i < baris; i++) {
+<<<<<<< HEAD
 
                 if (tabelModel.getValueAt(i, 8).toString().equals("")) {
                     diskonp = 0;
@@ -1102,6 +1109,37 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
 //              
                 harga = Integer.parseInt(tabelModel.getValueAt(i, 6).toString());
 
+=======
+               
+            if (tabelModel.getValueAt(i, 8).toString().equals("")) {
+                diskonp=0;
+            }else{
+                diskonp = Float.parseFloat(tabelModel.getValueAt(i, 8).toString());
+            }
+            if (tabelModel.getValueAt(i, 9).toString().equalsIgnoreCase("")) {
+                diskonrp=0;
+            }else{
+                diskonrp = Float.parseFloat(tabelModel.getValueAt(i, 9).toString());
+            }
+            if (tabelModel.getValueAt(i, 10).toString().equals("")) {
+                diskonp2=0;
+            }else{
+                diskonp2 = Float.parseFloat(tabelModel.getValueAt(i, 10).toString());
+            }
+            if (tabelModel.getValueAt(i, 11).toString().equals("")) {
+                diskonrp2=0;
+            }else{
+                diskonrp2 = Float.parseFloat(tabelModel.getValueAt(i, 11).toString());
+            }
+            if (tabelModel.getValueAt(i, 5).toString().equals("")) {
+                jumlah=1;
+            }else{
+                jumlah = Float.parseFloat(tabelModel.getValueAt(i, 5).toString());
+            }
+//              
+                harga = Float.parseFloat(tabelModel.getValueAt(i, 6).toString());
+              
+>>>>>>> 83d2dddbcff2c25207af0848a9edb16ebd815d82
                 subtotal1 = jumlah * harga;
 
 //                    diskonp11 =  ((subtotal * diskonp)/100);
@@ -1128,9 +1166,13 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
 //                 txt_tbl_total.setText("" + total);
 //                txt_jumQty.setText("" + totalqty);
 //                System.out.println("qty = " + totalqty);}
+<<<<<<< HEAD
         loadNumberTable();
 
 
+=======
+        loadNumberTable();  
+>>>>>>> 83d2dddbcff2c25207af0848a9edb16ebd815d82
     }//GEN-LAST:event_tbl_PembelianKeyReleased
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -1145,15 +1187,22 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {    // Membuat Perintah Saat Menekan Enter
 
+<<<<<<< HEAD
             int baris = tbl_Pembelian.getRowCount();
             int subtotal1 = 0, hargajadi1 = 0, diskonke21 = 0, totalqty = 0, total = 0, diskon = 0, diskonp1 = 0, diskonp11, diskonp21 = 0; //penjumlahan
             int jumlah = 0, harga = 0, subtotal = 0, diskonp = 0, diskonrp = 0, diskonp2 = 0, diskonrp2 = 0, hargajadi = 0;//panggil colom tabel
+=======
+            float baris = tbl_Pembelian.getRowCount();
+            float subtotal1 = 0, hargajadi1 = 0, diskonke21 = 0, totalqty = 0,total = 0, diskon = 0, diskonp1 = 0,diskonp11, diskonp21= 0; //penjumlahan
+            float jumlah = 0, harga = 0, subtotal = 0, diskonp =0, diskonrp=0, diskonp2=0, diskonrp2=0, hargajadi=0;//panggil colom tabel
+>>>>>>> 83d2dddbcff2c25207af0848a9edb16ebd815d82
             float qty = 0;
             TableModel tabelModel;
             tabelModel = tbl_Pembelian.getModel();
             int i = 0;
 
             for (i = 0; i < baris; i++) {
+<<<<<<< HEAD
 
                 if (tabelModel.getValueAt(i, 8).toString().equals("")) {
                     diskonp = 0;
@@ -1183,10 +1232,42 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
 //              
                 harga = Integer.parseInt(tabelModel.getValueAt(i, 6).toString());
 
+=======
+               
+            if (tabelModel.getValueAt(i, 8).toString().equals("")) {
+                diskonp=0;
+            }else{
+                diskonp = Float.parseFloat(tabelModel.getValueAt(i, 8).toString());
+            }
+            if (tabelModel.getValueAt(i, 9).toString().equalsIgnoreCase("")) {
+                diskonrp=0;
+            }else{
+                diskonrp = Float.parseFloat(tabelModel.getValueAt(i, 9).toString());
+            }
+            if (tabelModel.getValueAt(i, 10).toString().equals("")) {
+                diskonp2=0;
+            }else{
+                diskonp2 = Float.parseFloat(tabelModel.getValueAt(i, 10).toString());
+            }
+            if (tabelModel.getValueAt(i, 11).toString().equals("")) {
+                diskonrp2=0;
+            }else{
+                diskonrp2 = Float.parseFloat(tabelModel.getValueAt(i, 11).toString());
+            }
+            if (tabelModel.getValueAt(i, 5).toString().equals("")) {
+                jumlah=1;
+            }else{
+                jumlah = Float.parseFloat(tabelModel.getValueAt(i, 5).toString());
+            }
+//              
+                harga = Float.parseFloat(tabelModel.getValueAt(i, 6).toString());
+              
+>>>>>>> 83d2dddbcff2c25207af0848a9edb16ebd815d82
                 subtotal1 = jumlah * harga;
 
 //                    diskonp11 =  ((subtotal * diskonp)/100);
 //                    diskonp21 =  ((subtotal * diskonp2)/100);
+<<<<<<< HEAD
                 diskon = ((diskonp + diskonp2) * subtotal1 / 100);
 
                 hargajadi1 = subtotal1 - diskon - diskonrp - diskonrp2;
@@ -1200,15 +1281,51 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
             model.setValueAt(rptabel(String.valueOf(harga)), i - 1, 6);
             model.setValueAt(rptabelkembali(String.valueOf(harga)), i - 1, 6);
             model.addRow(new Object[]{"", "", "", "", "", "", "", "", "", "", "", "", ""});
+=======
+                    diskon = ((diskonp + diskonp2)*subtotal1/100);
+              
+              
+                hargajadi1= subtotal1 - diskon - diskonrp - diskonrp2;
+                System.out.println("diskonp : "+diskonp);
+//                total += hargajadi1;
+//                totalqty += jumlah;
+            }
+           
+            model.setValueAt(rptabel(String.valueOf(subtotal1)), i-1, 7);
+                model.setValueAt(rptabel(String.valueOf(hargajadi1)), i-1, 12);
+               model.setValueAt(rptabel(String.valueOf(harga)), i-1, 6); 
+//                model.setValueAt(rptabel(String.valueOf(diskonp)), i-1, 9);
+//                 model.setValueAt(rptabel(String.valueOf(diskonp2)), i-1, 11); 
+                   model.setValueAt(rptabelkembali(String.valueOf(harga)), i-1, 6); 
+//                   model.setValueAt(rptabelkembali(String.valueOf(diskonp)), i-1, 9); 
+//                   model.setValueAt(rptabelkembali(String.valueOf(diskonp2)), i-1, 11); 
+>>>>>>> 83d2dddbcff2c25207af0848a9edb16ebd815d82
 //            }
+                 model.addRow(new Object[]{"", "", "", "", "", "", "","","","","","",""});
         }
+<<<<<<< HEAD
 
+=======
+         
+//             
+          
+//            }
+        
+         
+>>>>>>> 83d2dddbcff2c25207af0848a9edb16ebd815d82
 //                 txt_tbl_total.setText("" + total);
 //                txt_jumQty.setText("" + totalqty);
 //                System.out.println("qty = " + totalqty);}
         loadNumberTable();
 
 
+<<<<<<< HEAD
+=======
+             
+                
+//     
+             
+>>>>>>> 83d2dddbcff2c25207af0848a9edb16ebd815d82
     }//GEN-LAST:event_tbl_PembelianKeyPressed
 
     private void txt_invKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_invKeyTyped
