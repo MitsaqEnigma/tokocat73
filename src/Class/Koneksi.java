@@ -17,7 +17,7 @@ public class Koneksi {
     private static Connection mysqlconfig;
     public static Connection configDB()throws SQLException{
         try {
-            String url="jdbc:mysql://localhost:3306/cat73";
+            String url="jdbc:mysql://localhost:3306/k9170490_tokowp";
             String user="root";
             String pass=""; 
             DriverManager.registerDriver(new com.mysql.jdbc.Driver());
