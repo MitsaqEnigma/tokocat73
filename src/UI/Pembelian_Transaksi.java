@@ -13,11 +13,13 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableColumn;
 import com.sun.glass.events.KeyEvent;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-// ayam
+
 /**
  *
  * @author User
@@ -116,7 +118,7 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
 
     void BersihField() {
         txt_inv.setText("");
-        tgl_inv.setCalendar(null);
+       tgl_inv.setCalendar(null);
         txt_diskon.setText("");
         txt_diskonRp.setText("");
     }
@@ -222,6 +224,15 @@ void hapussemuatabel(){
             } model.addRow(new Object[]{"", "", "", "", "", "", "","","","","","",""});
         }
 }
+static String rptabel(String b){
+    b = b.replace(",", "");
+            b = NumberFormat.getNumberInstance(Locale.getDefault()).format(Double.parseDouble(b));
+            return b;
+}static String rptabelkembali(String b){
+    b = b.replace(",", "");
+            
+            return b;
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -289,6 +300,7 @@ void hapussemuatabel(){
         jLabel4 = new javax.swing.JLabel();
         comSupplier = new javax.swing.JComboBox();
         jButton1 = new javax.swing.JButton();
+        tgl_inv = new com.toedter.calendar.JDateChooser();
 
         comTableBarang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "tesssssss" }));
         comTableBarang.addActionListener(new java.awt.event.ActionListener() {
@@ -761,7 +773,8 @@ void hapussemuatabel(){
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(txt_diskon, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(txt_inv, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txt_diskonRp, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_diskonRp, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tgl_inv, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(112, 112, 112))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel21)
@@ -838,7 +851,9 @@ void hapussemuatabel(){
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(txt_inv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel23))
-                                .addGap(29, 29, 29)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tgl_inv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(3, 3, 3)
                                 .addComponent(txt_diskon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1045,7 +1060,7 @@ DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
         if (tbl_Pembelian.getRowCount() >= 0) {    
 
             int baris = tbl_Pembelian.getRowCount();
-            int subtotal1 = 0, hargajadi1 = 0, diskonp1 = 0, diskonke21 = 0, totalqty = 0,total = 0; //penjumlahan
+            int subtotal1 = 0, hargajadi1 = 0, diskonke21 = 0, totalqty = 0,total = 0, diskon = 0, diskonp1 = 0,diskonp11, diskonp21= 0; //penjumlahan
             int jumlah = 0, harga = 0, subtotal = 0, diskonp =0, diskonrp=0, diskonp2=0, diskonrp2=0, hargajadi=0;//panggil colom tabel
             float qty = 0;
             TableModel tabelModel;
@@ -1053,62 +1068,56 @@ DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
             int i = 0;
            
             for (i = 0; i < baris; i++) {
+               
             if (tabelModel.getValueAt(i, 8).toString().equals("")) {
                 diskonp=0;
             }else{
                 diskonp = Integer.parseInt(tabelModel.getValueAt(i, 8).toString());
             }
             if (tabelModel.getValueAt(i, 9).toString().equalsIgnoreCase("")) {
-                diskonrp=-1;
+                diskonrp=0;
             }else{
                 diskonrp = Integer.parseInt(tabelModel.getValueAt(i, 9).toString());
             }
             if (tabelModel.getValueAt(i, 10).toString().equals("")) {
-                diskonp2=-2;
+                diskonp2=0;
             }else{
                 diskonp2 = Integer.parseInt(tabelModel.getValueAt(i, 10).toString());
             }
             if (tabelModel.getValueAt(i, 11).toString().equals("")) {
-                diskonrp2=-3;
+                diskonrp2=0;
             }else{
                 diskonrp2 = Integer.parseInt(tabelModel.getValueAt(i, 11).toString());
             }
             if (tabelModel.getValueAt(i, 5).toString().equals("")) {
-                jumlah=0;
+                jumlah=1;
             }else{
                 jumlah = Integer.parseInt(tabelModel.getValueAt(i, 5).toString());
             }
 //              
                 harga = Integer.parseInt(tabelModel.getValueAt(i, 6).toString());
-                
-                System.out.println("1diskonp : "+diskonp+" dinkonp2 : "+diskonrp2);
+              
                 subtotal1 = jumlah * harga;
-                if (diskonp >= 0){
-                    diskonp1 =  ((subtotal * diskonp)/100);
-                    
-                }else{
-                diskonp = 0;
-            } if (diskonp2 >= 0){
-                    diskonp2 =  ((subtotal * diskonp2)/100);
-                }else{
-                diskonp2 = 0;
-            }
-            if(diskonrp<0){
-                diskonrp = 0;
-            }
-            if(diskonrp2<0){
-                diskonrp2 = 0;
-            }
-                System.out.println("2diskonp : "+diskonp+" dinkonp2 : "+diskonp2 +"harga:" +harga);
-                diskonp21 = dis
-                hargajadi1= subtotal1 - diskonp- diskonp2 - diskonrp - diskonrp2;
-                
+               
+//                    diskonp11 =  ((subtotal * diskonp)/100);
+//                    diskonp21 =  ((subtotal * diskonp2)/100);
+                    diskon = ((diskonp + diskonp2)*subtotal1/100);
+              
+              
+                hargajadi1= subtotal1 - diskon - diskonrp - diskonrp2;
+                System.out.println("diskonp : "+diskonp);
 //                total += hargajadi1;
 //                totalqty += jumlah;
             }
-                model.setValueAt(subtotal1, i-1, 7);
-                model.setValueAt(hargajadi1, i-1, 12);
-                
+           
+            model.setValueAt(rptabel(String.valueOf(subtotal1)), i-1, 7);
+                model.setValueAt(rptabel(String.valueOf(hargajadi1)), i-1, 12);
+               model.setValueAt(rptabel(String.valueOf(harga)), i-1, 6); 
+//                model.setValueAt(rptabel(String.valueOf(diskonp)), i-1, 9);
+//                 model.setValueAt(rptabel(String.valueOf(diskonp2)), i-1, 11); 
+                   model.setValueAt(rptabelkembali(String.valueOf(harga)), i-1, 6); 
+//                   model.setValueAt(rptabelkembali(String.valueOf(diskonp)), i-1, 9); 
+//                   model.setValueAt(rptabelkembali(String.valueOf(diskonp2)), i-1, 11); 
 //            }
         }
          
@@ -1116,6 +1125,7 @@ DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
 //                txt_jumQty.setText("" + totalqty);
 //                System.out.println("qty = " + totalqty);}
         loadNumberTable();       
+   
 
     }//GEN-LAST:event_tbl_PembelianKeyReleased
 
@@ -1131,47 +1141,62 @@ hapussemuatabel();
 DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {    // Membuat Perintah Saat Menekan Enter
 
-            int baris = tbl_Pembelian.getRowCount();
-            float subtotal1 = 0, hargajadi1 = 0, diskonp1, diskonke21, totalqty = 0,total = 0; //penjumlahan
-            float jumlah = 0, harga = 0, subtotal = 0, diskonp =0, diskonrp=0, diskonke2=0, diskonm2rp=0, hargajadi=0;//panggil colom tabel
+          int baris = tbl_Pembelian.getRowCount();
+            int subtotal1 = 0, hargajadi1 = 0, diskonke21 = 0, totalqty = 0,total = 0, diskon = 0, diskonp1 = 0,diskonp11, diskonp21= 0; //penjumlahan
+            int jumlah = 0, harga = 0, subtotal = 0, diskonp =0, diskonrp=0, diskonp2=0, diskonrp2=0, hargajadi=0;//panggil colom tabel
             float qty = 0;
             TableModel tabelModel;
             tabelModel = tbl_Pembelian.getModel();
             int i = 0;
            
             for (i = 0; i < baris; i++) {
+               
             if (tabelModel.getValueAt(i, 8).toString().equals("")) {
                 diskonp=0;
             }else{
-                diskonp = Float.parseFloat(tabelModel.getValueAt(i, 8).toString());
+                diskonp = Integer.parseInt(tabelModel.getValueAt(i, 8).toString());
             }
             if (tabelModel.getValueAt(i, 9).toString().equalsIgnoreCase("")) {
                 diskonrp=0;
             }else{
-                diskonrp = Float.parseFloat(tabelModel.getValueAt(i, 9).toString());
+                diskonrp = Integer.parseInt(tabelModel.getValueAt(i, 9).toString());
             }
             if (tabelModel.getValueAt(i, 10).toString().equals("")) {
-                diskonke2=0;
+                diskonp2=0;
             }else{
-                diskonke2 = Float.parseFloat(tabelModel.getValueAt(i, 10).toString());
+                diskonp2 = Integer.parseInt(tabelModel.getValueAt(i, 10).toString());
             }
             if (tabelModel.getValueAt(i, 11).toString().equals("")) {
-                diskonm2rp=0;
+                diskonrp2=0;
             }else{
-                diskonm2rp = Float.parseFloat(tabelModel.getValueAt(i, 11).toString());
+                diskonrp2 = Integer.parseInt(tabelModel.getValueAt(i, 11).toString());
             }
-                jumlah = Float.parseFloat(tabelModel.getValueAt(i, 5).toString());
-                harga = Float.parseFloat(tabelModel.getValueAt(i, 6).toString());
-                
+            if (tabelModel.getValueAt(i, 5).toString().equals("")) {
+                jumlah=1;
+            }else{
+                jumlah = Integer.parseInt(tabelModel.getValueAt(i, 5).toString());
+            }
+//              
+                harga = Integer.parseInt(tabelModel.getValueAt(i, 6).toString());
+              
                 subtotal1 = jumlah * harga;
-                diskonp1 = ((diskonp + diskonke2) * subtotal1 / 100);
-                hargajadi1= subtotal1 - diskonp1 - diskonrp - diskonm2rp;
+               
+//                    diskonp11 =  ((subtotal * diskonp)/100);
+//                    diskonp21 =  ((subtotal * diskonp2)/100);
+                    diskon = ((diskonp + diskonp2)*subtotal1/100);
+              
+              
+                hargajadi1= subtotal1 - diskon - diskonrp - diskonrp2;
+                
 //                total += hargajadi1;
 //                totalqty += jumlah;
-            }        
-                model.setValueAt(subtotal1, i-1, 7);
-                model.setValueAt(hargajadi1, i-1, 12);
-                model.addRow(new Object[]{"", "", "", "", "", "", "","","","","","",""});
+            }
+           
+               model.setValueAt(rptabel(String.valueOf(subtotal1)), i-1, 7);
+               model.setValueAt(rptabel(String.valueOf(hargajadi1)), i-1, 12);
+               model.setValueAt(rptabel(String.valueOf(harga)), i-1, 6); 
+               model.setValueAt(rptabelkembali(String.valueOf(harga)), i-1, 6); 
+               model.addRow(new Object[]{"", "", "", "", "", "", "","","","","","",""});
 //            }
         }
          
@@ -1180,6 +1205,7 @@ DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
 //                System.out.println("qty = " + totalqty);}
         loadNumberTable();       
 
+             
     }//GEN-LAST:event_tbl_PembelianKeyPressed
 
     private void txt_invKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_invKeyTyped
@@ -1412,6 +1438,7 @@ DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
     private javax.swing.JLabel lbl_nmKasir;
     private javax.swing.JButton tblActionTabelBarang;
     private javax.swing.JTable tbl_Pembelian;
+    private com.toedter.calendar.JDateChooser tgl_inv;
     private javax.swing.JTextField txt_almtSupply;
     private javax.swing.JTextField txt_diskon;
     private javax.swing.JTextField txt_diskonRp;

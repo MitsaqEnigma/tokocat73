@@ -215,6 +215,7 @@
                                   <Component id="txt_inv" alignment="0" min="-2" pref="174" max="-2" attributes="0"/>
                               </Group>
                               <Component id="txt_diskonRp" alignment="1" min="-2" pref="173" max="-2" attributes="0"/>
+                              <Component id="tgl_inv" alignment="0" min="-2" pref="174" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="112" max="-2" attributes="0"/>
                       </Group>
@@ -314,7 +315,9 @@
                                       <Component id="txt_inv" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel23" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tgl_inv" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                                   <Component id="txt_diskon" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
@@ -1015,6 +1018,8 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="com.toedter.calendar.JDateChooser" name="tgl_inv">
         </Component>
       </SubComponents>
     </Container>
