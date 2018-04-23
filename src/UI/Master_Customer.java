@@ -353,8 +353,10 @@ public class Master_Customer extends javax.swing.JDialog {
 //        listCustomer = list.get(jTable7.getSelectedRow());
         listCustomer = (ListCustomer) myarrlist.getLc().get(jTable7.getSelectedRow());
         listSalesman = (ListSalesman) myarrlist.getLs().get(jTable7.getSelectedRow());
+//        Object[] temp = {listCustomer, listSalesman};
         Object[] temp = {listCustomer, listSalesman};
         Master_Customer_NewEdit mcne = new Master_Customer_NewEdit(new Awal(rootPaneCheckingEnabled), rootPaneCheckingEnabled, temp, true);
+//        Master_Customer_NewEdit mcne = new Master_Customer_NewEdit(new Awal(rootPaneCheckingEnabled), rootPaneCheckingEnabled, new Object[] {listCustomer, listSalesman}, true);
         mcne.setLocationRelativeTo(new Awal(rootPaneCheckingEnabled));
         mcne.setVisible(true);
     }//GEN-LAST:event_jLabel19MouseClicked
