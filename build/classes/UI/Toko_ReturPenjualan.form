@@ -115,6 +115,12 @@
               <StringArray count="0"/>
             </Property>
           </Properties>
+<<<<<<< HEAD
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="vSatuan.disable();"/>
+          </AuxValues>
+=======
+>>>>>>> 66150f8b50b0ce651b72ce8f53035af3ea51c6cd
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
@@ -138,12 +144,22 @@
         </Component>
         <Component class="javax.swing.JTextField" name="vJumlah">
           <AuxValues>
+<<<<<<< HEAD
+            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="vJumlah.addKeyListener(new java.awt.event.KeyAdapter() {&#xa;    public void keyReleased(java.awt.event.KeyEvent evt) {&#xa;        vJumlahKeyReleased(evt);&#xa;    }&#xa;    &#xa;});&#xa;vJumlah.setText(&quot;0&quot;);"/>
+=======
             <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="vJumlah.addKeyListener(new java.awt.event.KeyAdapter() {&#xa;    public void keyTyped(java.awt.event.KeyEvent evt) {&#xa;        vJumlahKeyTyped(evt);&#xa;    }&#xa;});&#xa;vJumlah.setText(&quot;0&quot;);"/>
+>>>>>>> 66150f8b50b0ce651b72ce8f53035af3ea51c6cd
           </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="vTotalStok">
           <Properties>
+<<<<<<< HEAD
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="&quot;&quot;" type="code"/>
+            </Property>
+=======
             <Property name="text" type="java.lang.String" value="*Total Stok : "/>
+>>>>>>> 66150f8b50b0ce651b72ce8f53035af3ea51c6cd
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="vTotalHarga">
@@ -183,7 +199,13 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
+<<<<<<< HEAD
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="&quot;*Jumlah Maksimal Return : &quot;" type="code"/>
+            </Property>
+=======
             <Property name="text" type="java.lang.String" value="*Jumlah Pembelian Terakhir :"/>
+>>>>>>> 66150f8b50b0ce651b72ce8f53035af3ea51c6cd
           </Properties>
         </Component>
       </SubComponents>
@@ -237,7 +259,11 @@
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="vSearchFocusLost"/>
           </Events>
           <AuxValues>
+<<<<<<< HEAD
+            <AuxValue name="JavaCodeGenerator_AddingCodePre" type="java.lang.String" value="vSearch.addKeyListener(new java.awt.event.KeyAdapter() {&#xa;    public void keyReleased(java.awt.event.KeyEvent evt) {&#xa;        vSearchKeyReleased(evt);&#xa;    }&#xa;});"/>
+=======
             <AuxValue name="JavaCodeGenerator_AddingCodePre" type="java.lang.String" value="vSearch.addKeyListener(new java.awt.event.KeyAdapter() {&#xa;    public void keyTyped(java.awt.event.KeyEvent evt) {&#xa;        vSearchKeyTyped(evt);&#xa;    }&#xa;});"/>
+>>>>>>> 66150f8b50b0ce651b72ce8f53035af3ea51c6cd
           </AuxValues>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane2">
@@ -313,6 +339,11 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
+<<<<<<< HEAD
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+=======
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -323,6 +354,7 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="vSearchRetur" min="-2" pref="164" max="-2" attributes="0"/>
                       </Group>
+>>>>>>> 66150f8b50b0ce651b72ce8f53035af3ea51c6cd
                       <Component id="jScrollPane3" alignment="0" pref="487" max="32767" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -338,6 +370,22 @@
                               </Group>
                           </Group>
                       </Group>
+<<<<<<< HEAD
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="vNota" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnTambahBarangRetur" alignment="0" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="jButton1" max="32767" attributes="0"/>
+                              <Component id="vOk" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="vSearchRetur" min="-2" pref="164" max="-2" attributes="0"/>
+                      </Group>
+=======
+>>>>>>> 66150f8b50b0ce651b72ce8f53035af3ea51c6cd
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -347,15 +395,30 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
+<<<<<<< HEAD
+                  <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="vNota" max="32767" attributes="0"/>
+                      <Component id="vOk" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+=======
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
+>>>>>>> 66150f8b50b0ce651b72ce8f53035af3ea51c6cd
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnTambahBarangRetur" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="vSearchRetur" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
+<<<<<<< HEAD
+                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                  <Component id="jScrollPane3" pref="111" max="32767" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+=======
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jScrollPane3" pref="130" max="32767" attributes="0"/>
                   <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+>>>>>>> 66150f8b50b0ce651b72ce8f53035af3ea51c6cd
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jTextField5" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -382,7 +445,11 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel14" min="-2" pref="194" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
+<<<<<<< HEAD
+                      <Component id="vdatetime" pref="275" max="32767" attributes="0"/>
+=======
                       <Component id="vdatetime" max="32767" attributes="0"/>
+>>>>>>> 66150f8b50b0ce651b72ce8f53035af3ea51c6cd
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -392,10 +459,17 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+<<<<<<< HEAD
+                          <Component id="jLabel14" alignment="0" max="32767" attributes="0"/>
+                          <Component id="vdatetime" alignment="0" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+=======
                           <Component id="jLabel14" alignment="0" pref="30" max="32767" attributes="0"/>
                           <Component id="vdatetime" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
+>>>>>>> 66150f8b50b0ce651b72ce8f53035af3ea51c6cd
                   </Group>
               </Group>
             </DimensionLayout>
@@ -480,7 +554,11 @@
           <Events>
             <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="vSearchReturFocusGained"/>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="vSearchReturFocusLost"/>
+<<<<<<< HEAD
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="vSearchReturKeyReleased"/>
+=======
             <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="vSearchReturKeyTyped"/>
+>>>>>>> 66150f8b50b0ce651b72ce8f53035af3ea51c6cd
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButton1">
@@ -491,6 +569,27 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
           </Events>
         </Component>
+<<<<<<< HEAD
+        <Component class="javax.swing.JTextField" name="vNota">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Nomor Nota"/>
+            <Property name="caretPosition" type="int" value="6"/>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="vNotaFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="vNotaFocusLost"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="vOk">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="OK"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="vOkActionPerformed"/>
+          </Events>
+        </Component>
+=======
+>>>>>>> 66150f8b50b0ce651b72ce8f53035af3ea51c6cd
       </SubComponents>
     </Container>
   </SubComponents>
