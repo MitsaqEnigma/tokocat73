@@ -256,12 +256,18 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     
     private void simpanTokoDetailReturn(String codeBarang){
 //        int total = Integer.parseInt(vJumlah.getText()) * Integer.parseInt(vHarga.getText());
+        
+//                vdatetime.setText(dt.format(d));
+        
         try{
             String year = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
             String no = "RT"+year.substring(year.length()-2)+"-"+selectLastDataDetailReturn();
             String kode_pegawai = "1";
+            java.util.Date d = new java.util.Date();
+            java.text.SimpleDateFormat dt = new java.text.SimpleDateFormat ("yyyy-MM-dd hh:mm:ss");
+            String date = dt.format(d);
             String data = "INSERT INTO toko_penjualan_return(no_faktur_toko_penjualan_return, tgl_toko_penjualan_return, kode_pegawai) "
-                    + "VALUES ('"+no+"', '"++"', '"+kode_pegawai+"')";
+                    + "VALUES ('"+no+"', '"+date+"', '"+kode_pegawai+"')";
             connection.simpanData(data);
             dPilihBarang.dispose();
         } catch(Exception e){
