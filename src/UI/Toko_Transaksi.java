@@ -8,6 +8,7 @@ package UI;
 import Java.Connect;
 import Java.ListSalesman;
 import Java.ListTokoTransaksi;
+import static UI.Pembelian_Transaksi.rptabel;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Component;
 import static java.awt.event.KeyEvent.*;
@@ -15,12 +16,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.CellEditor;
@@ -48,6 +51,7 @@ public class Toko_Transaksi extends javax.swing.JDialog {
     private boolean merahAktif = false;
     private String id;
     private int harga, jumlah;
+    private int totalBiaya = 0;
 
     public Toko_Transaksi() {
         initComponents();
@@ -60,10 +64,45 @@ public class Toko_Transaksi extends javax.swing.JDialog {
         this.connection = connection;
         AutoCompleteDecorator.decorate(comCustomer);
         AutoCompleteDecorator.decorate(comBarang);
+        AutoCompleteDecorator.decorate(comSatuan);
         setTanggal();
         loadNumberTable();
         FillComboCustomer();
         loadComTableBarang();
+    }
+
+    void hapussemuatabel() {
+        int Hapus = JOptionPane.showConfirmDialog(null, "Apakah anda yakin mau menghapus semua data di tabel", "konfirmasi", JOptionPane.YES_NO_OPTION);
+        if (Hapus == 0) {
+            DefaultTableModel model = (DefaultTableModel) jTableTransaksi.getModel();
+            for (int i = jTableTransaksi.getRowCount() - 1; i > -1; i--) {
+                model.removeRow(i);
+            }
+            model.addRow(new Object[]{"", "", "", "", "", "", "", "", "", "", "", "", ""});
+        }
+    }
+
+    void AturlebarKolom() {
+        TableColumn column;
+        jTableTransaksi.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        column = jTableTransaksi.getColumnModel().getColumn(0);
+        column.setPreferredWidth(30);
+        column = jTableTransaksi.getColumnModel().getColumn(1);
+        column.setPreferredWidth(40);
+        column = jTableTransaksi.getColumnModel().getColumn(2);
+        column.setPreferredWidth(200);
+        column = jTableTransaksi.getColumnModel().getColumn(3);
+        column.setPreferredWidth(70);
+        column = jTableTransaksi.getColumnModel().getColumn(4);
+        column.setPreferredWidth(60);
+        column = jTableTransaksi.getColumnModel().getColumn(5);
+        column.setPreferredWidth(50);
+        column = jTableTransaksi.getColumnModel().getColumn(6);
+        column.setPreferredWidth(120);
+        column = jTableTransaksi.getColumnModel().getColumn(7);
+        column.setPreferredWidth(140);
+        column = jTableTransaksi.getColumnModel().getColumn(8);
+        column.setPreferredWidth(60);
     }
 
     private void FillComboCustomer() {
@@ -99,6 +138,24 @@ public class Toko_Transaksi extends javax.swing.JDialog {
             while (rs.next()) {
                 String name = rs.getString(4);
                 comBarang.addItem(name);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Eror" + e);
+        }
+
+    }
+
+    private void loadComSatuanBarang(String kodeBarang) {
+        try {
+            String sql = "select k.nama_konversi from konversi k, barang_konversi bk, barang b where b.kode_barang "
+                    + "= bk.kode_barang and bk.kode_konversi = k.kode_konversi and b.kode_barang = '" + kodeBarang + "'";
+            PS = connection.Connect().prepareStatement(sql);
+            rs = PS.executeQuery();
+            comSatuan.removeAllItems();
+            while (rs.next()) {
+                String name = rs.getString(1);
+                System.out.println("nama:" + name);
+                comSatuan.addItem(name);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Eror" + e);
@@ -145,6 +202,7 @@ public class Toko_Transaksi extends javax.swing.JDialog {
         bBatal = new javax.swing.JButton();
         bSimpan = new javax.swing.JButton();
         comBarang = new javax.swing.JComboBox<>();
+        comSatuan = new javax.swing.JComboBox<>();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
@@ -295,6 +353,12 @@ public class Toko_Transaksi extends javax.swing.JDialog {
             }
         });
 
+        comSatuan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comSatuanActionPerformed(evt);
+            }
+        });
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel4.setBackground(new java.awt.Color(255, 153, 0));
@@ -400,7 +464,7 @@ public class Toko_Transaksi extends javax.swing.JDialog {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, true, false, true, false, false, false
+                false, true, true, true, true, false, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -411,10 +475,14 @@ public class Toko_Transaksi extends javax.swing.JDialog {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTableTransaksiKeyPressed(evt);
             }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTableTransaksiKeyReleased(evt);
+            }
         });
         jScrollPane5.setViewportView(jTableTransaksi);
         if (jTableTransaksi.getColumnModel().getColumnCount() > 0) {
             jTableTransaksi.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(comBarang));
+            jTableTransaksi.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(comSatuan));
         }
 
         bPrintTransaksi.setText("Print");
@@ -777,7 +845,7 @@ public class Toko_Transaksi extends javax.swing.JDialog {
                     .addComponent(jLabel27)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE))
                 .addGap(10, 10, 10)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -805,7 +873,7 @@ public class Toko_Transaksi extends javax.swing.JDialog {
     }//GEN-LAST:event_bExitTransaksiActionPerformed
 
     private void bClearTransaksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClearTransaksiActionPerformed
-
+        hapussemuatabel();
     }//GEN-LAST:event_bClearTransaksiActionPerformed
 
     private void bSaveTransaksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveTransaksiActionPerformed
@@ -836,11 +904,10 @@ public class Toko_Transaksi extends javax.swing.JDialog {
             while (rs.next()) {
                 id = rs.getString(1);
                 jumlah = rs.getInt(7);
-                harga = rs.getInt(6);
+                harga = rs.getInt(4);
                 int selectedRow = jTableTransaksi.getSelectedRow();
                 if (selectedRow != -1) {
                     jTableTransaksi.setValueAt(id, selectedRow, 1);
-                    jTableTransaksi.setValueAt(jumlah, selectedRow, 3);
                     jTableTransaksi.setValueAt(0, selectedRow, 4);
                     jTableTransaksi.setValueAt(harga, selectedRow, 6);
                 }
@@ -871,36 +938,43 @@ public class Toko_Transaksi extends javax.swing.JDialog {
         DefaultTableModel model = (DefaultTableModel) jTableTransaksi.getModel();
         int selectedRow = jTableTransaksi.getSelectedRow();
         int baris = jTableTransaksi.getRowCount();
-        int totalBiaya = 0;
         int jumlah = 0, harga = 0;
         int qty = 0;
         TableModel tabelModel;
-        
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER || evt.getKeyCode() == KeyEvent.VK_DOWN) {    // Membuat Perintah Saat Menekan Enter
+
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {    // Membuat Perintah Saat Menekan Enter
 
             tabelModel = jTableTransaksi.getModel();
-            for (int i = 0; i < baris; i++) {
-                jumlah = Integer.parseInt(tabelModel.getValueAt(i, 4).toString());
-                harga = Integer.parseInt(tabelModel.getValueAt(i, 6).toString());
-                int subtotal = jumlah * harga;
-                tabelModel.setValueAt(subtotal, i, 7);
+            jumlah = Integer.parseInt(tabelModel.getValueAt(jTableTransaksi.getSelectedRow(), 4).toString());
+            harga = Integer.parseInt(tabelModel.getValueAt(jTableTransaksi.getSelectedRow(), 6).toString());
+            int subtotal = jumlah * harga;
+            tabelModel.setValueAt(subtotal, jTableTransaksi.getSelectedRow(), 7);
 
-                totalBiaya = totalBiaya + (jumlah * harga);
-                qty += jumlah;
-            }
-            if (harga == 0) {
-                JOptionPane.showMessageDialog(null, "Data Terakhir Tidak Boleh kosong");
+            if (Integer.parseInt(tabelModel.getValueAt(jTableTransaksi.getSelectedRow(), 7).toString()) == 0) {
+                JOptionPane.showMessageDialog(null, "Data Terakhir Tidak Boleh kosong", "", 2);
             } else {
-                jTotal.setText("" + totalBiaya);
-
-                model.addRow(new Object[]{"", "", "", "", "0", "", "0"});
+                if (Integer.parseInt(tabelModel.getValueAt(jTableTransaksi.getRowCount() - 1, 7).toString()) != 0) {
+                    model.addRow(new Object[]{"", "", "", "", "0", "", "0", "0"});
+                    totalBiaya += (jumlah * harga);
+                    jTotal.setText("" + totalBiaya);
+                }
             }
 
+        } else if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
+            if (jTableTransaksi.getRowCount()-1 == -1) {
+                model.addRow(new Object[]{"", "", "", "", "", "", "", "", "", "", "", "", ""});
+            } else {
+                model.removeRow(jTableTransaksi.getRowCount() - 1);
+            }
         }
         loadNumberTable();
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTableTransaksiKeyPressed
 
+    static String rptabel(String b) {
+        b = b.replace(",", "");
+        b = NumberFormat.getNumberInstance(Locale.getDefault()).format(Double.parseDouble(b));
+        return b;
+    }
     private void buttonMerahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMerahActionPerformed
         if (merahAktif == false) {
             buttonMerah.setText("<");
@@ -913,9 +987,14 @@ public class Toko_Transaksi extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_buttonMerahActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void jTableTransaksiKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableTransaksiKeyReleased
+
+    }//GEN-LAST:event_jTableTransaksiKeyReleased
+
+    private void comSatuanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comSatuanActionPerformed
+        loadComSatuanBarang(jTableTransaksi.getValueAt(jTableTransaksi.getSelectedRow(), 1).toString());
+    }//GEN-LAST:event_comSatuanActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -965,6 +1044,7 @@ public class Toko_Transaksi extends javax.swing.JDialog {
     private javax.swing.JButton buttonMerah;
     private javax.swing.JComboBox<String> comBarang;
     private javax.swing.JComboBox<String> comCustomer;
+    private javax.swing.JComboBox<String> comSatuan;
     private javax.swing.JDialog dPembayaran;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;

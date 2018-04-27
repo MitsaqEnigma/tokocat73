@@ -26,19 +26,19 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Toko_ReturPenjualan extends javax.swing.JFrame {
 
-    private HashMap konversi, idReturn;
+    private HashMap konversi, idReturn, jmlBarang;
     private DefaultTableModel tabelBarang, tabelRetur;
     private ResultSet hasil;
     public Statement stmt;
     private Connect connection;
-    private String code_barang;
+    private String code_barang, code_konversi;
+    private String noNota = "";
     
     public Toko_ReturPenjualan() {
         initComponents();
         this.setLocationRelativeTo(null);
         connection = new Connect();
-        konversi = new HashMap();
-        idReturn = new HashMap();
+        konversi = new HashMap(); idReturn = new HashMap(); jmlBarang = new HashMap();
         tabelBarang = new DefaultTableModel(new String[]{"No.","Kode","Nama Barang"},0);
         jTable2.setModel(tabelBarang);
         jTable2.getColumnModel().getColumn(0).setPreferredWidth(5);
@@ -73,7 +73,6 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
             public void run() {
                 java.util.Date d = new java.util.Date( );
                 java.text.SimpleDateFormat dt = new java.text.SimpleDateFormat ("E dd-MM-yyyy 'at' hh:mm:ss a");
-
                 vdatetime.setText(dt.format(d));
             }
         }, 500, 500);
@@ -82,10 +81,12 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     private String tampilTabelDataBarang(String search){
         String data = "";
         try{
-            data = "SELECT proud_code, nama_barang "
-                + "FROM barang "
-                +(search.equalsIgnoreCase("*") ? "" : "WHERE nama_barang LIKE '%" +search+ "%' OR proud_code LIKE '%" +search+ "%'" )+" "
-                + "ORDER BY kode_barang";
+            data = "SELECT TPD.kode_barang, B.nama_barang, TPD.jumlah_barang "
+                + "FROM barang B, toko_penjualan_detail TPD "
+                + "WHERE no_faktur_toko_penjualan = '"+noNota+"' AND "
+                + "TPD.kode_barang = B.proud_code "
+                +(search.equalsIgnoreCase("*") ? "" : "AND B.nama_barang LIKE '%" +search+ "%' " )+" "
+                + "ORDER BY TPD.kode_barang";
             hasil = connection.ambilData(data);
             setModelTabelBarang(hasil);
         } catch(Exception e){
@@ -98,9 +99,10 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         try{
             int no = 1;
             while (hasil.next()){
-                String kode = hasil.getString("proud_code");
+                String kode = hasil.getString("kode_barang");
                 String nama = hasil.getString("nama_barang");
                 tabelBarang.addRow(new Object[]{no,kode,nama});
+                jmlBarang.put(kode, hasil.getString("jumlah_barang"));
                 no++;
             }
         } catch(Exception e){
@@ -117,19 +119,23 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     
     private void isiPilihBarang(String kode){
         try{
-            String kode_barang = "";
-            String data = "SELECT kode_barang, proud_code, nama_barang, harga_jual_3_barang "
-                    + "FROM barang "
-                    + "WHERE proud_code = '"+kode+"' ";
+            String data = "SELECT TPD.kode_barang, B.nama_barang, B.harga_jual_3_barang, TPD.kode_barang_konversi, K.nama_konversi "
+                    + "FROM barang B, toko_penjualan_detail TPD, konversi K "
+                    + "WHERE B.proud_code = TPD.kode_barang AND TPD.kode_barang_konversi = K.kode_konversi AND "
+                    + "TPD.kode_barang = '"+kode+"' ";
             hasil = connection.ambilData(data);
             while (hasil.next()){
-                kode_barang = hasil.getString("kode_barang");
+//                String kode_barang = hasil.getString("kode_barang");
+                code_konversi = hasil.getString("kode_barang_konversi");
                 vNamaBarang.setText(hasil.getString("nama_barang"));
                 vHarga.setText(hasil.getString("harga_jual_3_barang"));
-                code_barang = hasil.getString("proud_code");
+                jLabel8.setText("*Jumlah Maksimal Return : "+jmlBarang.get(kode));
+                code_barang = hasil.getString("kode_barang");
+                vSatuan.removeAllItems();
+                vSatuan.addItem(hasil.getString("nama_konversi"));
             }
 //            System.out.println("isi pilih barang sukses");
-            selectKonversi(kode_barang);
+//            selectKonversi(kode_barang);
         } catch(Exception e){
             System.out.println("Toko_Retur/isiPilihBarang "+e);
         }
@@ -185,11 +191,16 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     private void isiTabelReturn(String search){
         ResultSet nama_barang, harga_barang;
         try{
-            String data = "SELECT DT.id_toko_penjualan_return_detail, B.nama_barang, K.nama_konversi, DT.jumlah_barang, B.harga_jual_3_barang, DT.harga_barang "
-                    + "FROM toko_penjualan_detail_return DT, barang B, konversi K "
-                    + "WHERE DT.kode_barang = proud_code AND DT.kode_barang_konversi = K.kode_konversi "
+            String data = "SELECT TKR.id_toko_keranjang, B.nama_barang, K.nama_konversi, TKR.jumlah_barang, B.harga_jual_3_barang, TKR.harga_barang "
+                    + "FROM barang B, konversi K, toko_keranjang_return TKR "
+                    + "WHERE TKR.kode_barang = B.proud_code AND TKR.kode_barang_konversi = K.kode_konversi "
                     + (search.equalsIgnoreCase("*") ? "" : "AND B.nama_barang LIKE '%"+search+"%' ")+" "
-                    + "ORDER BY id_toko_penjualan_return_detail";
+                    + "ORDER BY TKR.id_toko_keranjang";
+//            String data = "SELECT DT.id_toko_penjualan_return_detail, B.nama_barang, K.nama_konversi, DT.jumlah_barang, B.harga_jual_3_barang, DT.harga_barang "
+//                    + "FROM toko_penjualan_detail_return DT, barang B, konversi K "
+//                    + "WHERE DT.kode_barang = proud_code AND DT.kode_barang_konversi = K.kode_konversi "
+//                    + (search.equalsIgnoreCase("*") ? "" : "AND B.nama_barang LIKE '%"+search+"%' ")+" "
+//                    + "ORDER BY id_toko_penjualan_return_detail";
             hasil = connection.ambilData(data);
             setModelTabelReturn(hasil);
         } catch(Exception e){
@@ -207,7 +218,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
                 String harga = hasil.getString("harga_jual_3_barang");
                 String total = hasil.getString("harga_barang");
                 tabelRetur.addRow(new Object[]{no,barang,satuan,jumlah,harga,total});
-                idReturn.put(no,hasil.getString("id_toko_penjualan_return_detail"));
+                idReturn.put(no,hasil.getString("id_toko_keranjang"));
                 no++;
             }
             setTotalReturn();
@@ -220,7 +231,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         try{
             int total = 0;
             String data = "SELECT harga_barang "
-                    + "FROM toko_penjualan_detail_return";
+                    + "FROM toko_keranjang_return";
             hasil = connection.ambilData(data);
             while(hasil.next()){
                 total = total + hasil.getInt("harga_barang");
@@ -231,14 +242,32 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         }
     }
     
-    private void inputTokoDetailReturn(String codeBarang){
+    private void inputTokoKeranjangReturn(String codeBarang){
+        int total = Integer.parseInt(vJumlah.getText()) * Integer.parseInt(vHarga.getText());
+        try{
+            String data = "INSERT INTO toko_keranjang_return(kode_barang, jumlah_barang, harga_barang, kode_barang_konversi) "
+                    + "VALUES ('"+codeBarang+"', '"+vJumlah.getText()+"', '"+total+"', '"+code_konversi+"')";
+            connection.simpanData(data);
+            dPilihBarang.dispose();
+        }catch(Exception e){
+            System.out.println("Toko_Retur/inputTokoKeranjangReturn - "+e);
+        }
+    }
+    
+    private void simpanTokoDetailReturn(String codeBarang){
+//        int total = Integer.parseInt(vJumlah.getText()) * Integer.parseInt(vHarga.getText());
+        
+//                vdatetime.setText(dt.format(d));
+        
         try{
             String year = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
             String no = "RT"+year.substring(year.length()-2)+"-"+selectLastDataDetailReturn();
-            String satuan = (konversi.get(vSatuan.getSelectedItem().toString())).toString();
-            String data = "INSERT INTO toko_penjualan_detail_return(no_faktur_toko_penjualan_return, kode_barang, "
-                    + "jumlah_barang, harga_barang, kode_barang_konversi) VALUES ('"+no+"', '"+code_barang+"',"
-                    + " '"+vJumlah.getText()+"','"+vTotalHarga.getText()+"', '"+satuan+"') ";
+            String kode_pegawai = "1";
+            java.util.Date d = new java.util.Date();
+            java.text.SimpleDateFormat dt = new java.text.SimpleDateFormat ("yyyy-MM-dd hh:mm:ss");
+            String date = dt.format(d);
+            String data = "INSERT INTO toko_penjualan_return(no_faktur_toko_penjualan_return, tgl_toko_penjualan_return, kode_pegawai) "
+                    + "VALUES ('"+no+"', '"+date+"', '"+kode_pegawai+"')";
             connection.simpanData(data);
             dPilihBarang.dispose();
         } catch(Exception e){
@@ -248,9 +277,10 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     
     private void hapusBarang(String kode){
         try{
-            String data = "DELETE FROM toko_penjualan_detail_return "
-                    + "WHERE id_toko_penjualan_return_detail = '"+kode+"' ";
+            String data = "DELETE FROM toko_keranjang_return "
+                    + "WHERE id_toko_keranjang = '"+kode+"' ";
             connection.simpanData(data);
+            JOptionPane.showMessageDialog(null, "Barang berhasil dihapus");
             deleteTabel(tabelRetur);
             isiTabelReturn("*");
         } catch(Exception e){
@@ -258,6 +288,30 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         }
     }
     
+    private void hitungTotalHarga(){
+        int harga = Integer.parseInt(vHarga.getText().toString());
+        int jumlah = Integer.parseInt(vJumlah.getText().toString());
+        int total = harga*jumlah;
+        vTotalHarga.setText(Integer.toString(total));
+    }
+    
+    private String selectNoNota(String nomor){
+        String noNota = "";
+        try{
+            String data = "SELECT no_faktur_toko_penjualan "
+                    + "FROM toko_penjualan "
+                    + "WHERE no_faktur_toko_penjualan = '"+nomor+"' ";
+            hasil = connection.ambilData(data);
+            if(hasil.next()){
+                noNota = hasil.getString("no_faktur_toko_penjualan");
+            } else{
+                JOptionPane.showMessageDialog(null, "Nomor Nota Tidak ditemukan");
+            }
+        } catch(Exception e){
+            System.out.println("Toko_Retur/selectNoNota "+e);
+        }
+        return noNota;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -299,6 +353,8 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         jTextField5 = new javax.swing.JTextField();
         vSearchRetur = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        vNota = new javax.swing.JTextField();
+        vOk = new javax.swing.JButton();
 
         dPilihBarang.setTitle("Pilih Barang");
         dPilihBarang.setBackground(new java.awt.Color(255, 255, 255));
@@ -313,6 +369,8 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
             }
         });
 
+        vSatuan.disable();
+
         jLabel5.setText("Satuan");
 
         vHarga.setEditable(false);
@@ -322,13 +380,14 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         jLabel7.setText("Jumlah");
 
         vJumlah.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                vJumlahKeyTyped(evt);
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                vJumlahKeyReleased(evt);
             }
+
         });
         vJumlah.setText("0");
 
-        vTotalStok.setText("*Total Stok : ");
+        vTotalStok.setText("");
 
         vTotalHarga.setEditable(false);
         vTotalHarga.addActionListener(new java.awt.event.ActionListener() {
@@ -355,7 +414,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
             }
         });
 
-        jLabel8.setText("*Jumlah Pembelian Terakhir :");
+        jLabel8.setText("*Jumlah Maksimal Return : ");
 
         javax.swing.GroupLayout dPilihBarangLayout = new javax.swing.GroupLayout(dPilihBarang.getContentPane());
         dPilihBarang.getContentPane().setLayout(dPilihBarangLayout);
@@ -456,8 +515,8 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTable2);
 
         vSearch.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                vSearchKeyTyped(evt);
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                vSearchKeyReleased(evt);
             }
         });
 
@@ -506,7 +565,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(vdatetime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(vdatetime, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -514,7 +573,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(vdatetime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -574,8 +633,8 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
             }
         });
         vSearchRetur.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                vSearchReturKeyTyped(evt);
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                vSearchReturKeyReleased(evt);
             }
         });
 
@@ -583,6 +642,24 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+
+        vNota.setText("Nomor Nota");
+        vNota.setCaretPosition(6);
+        vNota.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                vNotaFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                vNotaFocusLost(evt);
+            }
+        });
+
+        vOk.setText("OK");
+        vOk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                vOkActionPerformed(evt);
             }
         });
 
@@ -594,12 +671,6 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
             .addGroup(jReturPenjualanLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jReturPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jReturPenjualanLayout.createSequentialGroup()
-                        .addComponent(btnTambahBarangRetur)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(vSearchRetur, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jReturPenjualanLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -610,21 +681,35 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
                             .addGroup(jReturPenjualanLayout.createSequentialGroup()
                                 .addComponent(jLabel16)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField5)))))
+                                .addComponent(jTextField5))))
+                    .addGroup(jReturPenjualanLayout.createSequentialGroup()
+                        .addGroup(jReturPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(vNota, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnTambahBarangRetur, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jReturPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(vOk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(vSearchRetur, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jReturPenjualanLayout.setVerticalGroup(
             jReturPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jReturPenjualanLayout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(7, 7, 7)
+                .addGroup(jReturPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(vNota)
+                    .addComponent(vOk, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jReturPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnTambahBarangRetur)
                     .addComponent(vSearchRetur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                .addGap(10, 10, 10)
+                .addGap(8, 8, 8)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jReturPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
                     .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -655,7 +740,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     }//GEN-LAST:event_vNamaBarangMouseClicked
 
     private void vTotalHargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vTotalHargaActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_vTotalHargaActionPerformed
 
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
@@ -670,11 +755,6 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         setPlaceHolder(vSearch, null);
     }//GEN-LAST:event_vSearchFocusLost
 
-    private void vSearchReturKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_vSearchReturKeyTyped
-        deleteTabel(tabelRetur);
-        isiTabelReturn(vSearchRetur.getText());
-    }//GEN-LAST:event_vSearchReturKeyTyped
-
     private void vSearchReturFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_vSearchReturFocusLost
         setPlaceHolder(vSearchRetur, null);
     }//GEN-LAST:event_vSearchReturFocusLost
@@ -684,8 +764,13 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     }//GEN-LAST:event_vSearchReturFocusGained
 
     private void btnTambahBarangReturActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahBarangReturActionPerformed
-        dPilihBarang.show();
-        dPilihBarang.setLocationRelativeTo(null);
+        if(!vNota.getText().equals("Nomor Nota")){
+            dPilihBarang.show();
+            dPilihBarang.setLocationRelativeTo(null);
+        } else{
+            JOptionPane.showMessageDialog(null, "Silahkan masukan Nomor Nota");
+        }
+        
     }//GEN-LAST:event_btnTambahBarangReturActionPerformed
 
     private void jTable3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable3MouseClicked
@@ -706,25 +791,69 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnSimpanPenjualan1ActionPerformed
 
+    private void vNotaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_vNotaFocusGained
+        if(vNota.getText().equals("Nomor Nota")){
+            vNota.setText("");
+        }
+    }//GEN-LAST:event_vNotaFocusGained
+
+    private void vNotaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_vNotaFocusLost
+        if(vNota.getText().isEmpty()){
+            vNota.setText("Nomor Nota");
+        }
+    }//GEN-LAST:event_vNotaFocusLost
+
+    private void vOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vOkActionPerformed
+        if(vOk.getText().equals("OK")){
+            String nomor_nota = vNota.getText();
+            if(nomor_nota.equals("Nomor Nota")){
+                JOptionPane.showMessageDialog(null, "Silahkan isi Nomor Nota");
+            } else{
+                noNota = selectNoNota(nomor_nota);
+                if(!noNota.equalsIgnoreCase("")){
+                    vNota.setEditable(false);
+                    vOk.setText("Edit");
+                }
+            }
+        } else{
+            vNota.setEditable(true);
+            vOk.setText("OK");
+            
+        }
+    }//GEN-LAST:event_vOkActionPerformed
+
+    private void vSearchReturKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_vSearchReturKeyReleased
+        deleteTabel(tabelRetur);
+        isiTabelReturn(vSearchRetur.getText());
+    }//GEN-LAST:event_vSearchReturKeyReleased
+
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt){
-        if(code_barang != null && (!vJumlah.getText().equalsIgnoreCase("") && !vJumlah.getText().equalsIgnoreCase("0")) && 
+        if(code_barang != null && (!vJumlah.getText().equalsIgnoreCase("")) && 
                 !vTotalHarga.getText().equalsIgnoreCase("")){
-            inputTokoDetailReturn(code_barang);
-            vNamaBarang.setText(""); vSatuan.removeAllItems(); vJumlah.setText("0"); 
-            vHarga.setText(""); vTotalHarga.setText(""); code_barang = null; 
-            deleteTabel(tabelRetur);
-            isiTabelReturn("*");
-            dPilihBarang.dispose();
+            int jumlahStok = Integer.parseInt(jmlBarang.get(code_barang).toString());
+            int jml = Integer.parseInt(vJumlah.getText());
+            if(jml <= jumlahStok && jml > 0){
+                inputTokoKeranjangReturn(code_barang);
+                vNamaBarang.setText(""); vSatuan.removeAllItems(); vJumlah.setText("0"); 
+                vHarga.setText(""); vTotalHarga.setText(""); code_barang = null; 
+                deleteTabel(tabelRetur);
+                isiTabelReturn("*");
+//                dPilihBarang.dispose();
+            } else{
+                JOptionPane.showMessageDialog(null, "Jumlah harus Kurang dari atau sama dengan Jumlah maksimal return");
+            }
         } else{
             JOptionPane.showMessageDialog(null, "Silahkan Pilih Barang, Jumlah Barang & Total Harga");
         }
     }
     
-    private void vSearchKeyTyped(java.awt.event.KeyEvent evt){
+    private void vSearchKeyReleased(java.awt.event.KeyEvent evt){
+//        aa;
         deleteTabel(tabelBarang);
         tampilTabelDataBarang(vSearch.getText().toString());
     }
-    private void vJumlahKeyTyped(java.awt.event.KeyEvent evt){
+    private void vJumlahKeyReleased(java.awt.event.KeyEvent evt){
+//        aa
         //set text to input only int
         char vchar = evt.getKeyChar();
         if(!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)){
@@ -732,10 +861,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         }
         
         if(!vJumlah.getText().equalsIgnoreCase("") && !vHarga.getText().equalsIgnoreCase("")){
-            int harga = Integer.parseInt(vHarga.getText().toString());
-            int jumlah = Integer.parseInt(vJumlah.getText().toString());
-            int total = harga*jumlah;
-            vTotalHarga.setText(Integer.toString(total));
+            hitungTotalHarga();
         }
     }
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {                                     
@@ -747,6 +873,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
             String kode = jTable2.getModel().getValueAt(row, 1).toString();
             isiPilihBarang(kode);
             dPilihDataBarang.dispose();
+            hitungTotalHarga();
         }
     }
     /**
@@ -817,6 +944,8 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     private javax.swing.JTextField vHarga;
     private javax.swing.JTextField vJumlah;
     private javax.swing.JTextField vNamaBarang;
+    private javax.swing.JTextField vNota;
+    private javax.swing.JButton vOk;
     private javax.swing.JComboBox vSatuan;
     private javax.swing.JTextField vSearch;
     private javax.swing.JTextField vSearchRetur;
