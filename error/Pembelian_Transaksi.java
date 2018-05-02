@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package UI;
 
 import Class.Koneksi;
@@ -118,7 +113,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
             String nomor = String.valueOf(a + 1);
             tbl_Pembelian.setValueAt(nomor + ".", a, 0);
         }
-
     }
 
     void BersihField() {
@@ -241,7 +235,7 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
 
     static String rptabelkembali(String b) {
         b = b.replace(",", "");
-<<<<<<< HEAD
+
 
         return b;
     }
@@ -255,11 +249,9 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
     }
 
 //        }
-=======
-        return b;
-    }
+//        return b;
+//    }
 
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -338,21 +330,16 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
 
         tblActionTabelBarang.setText("jButton1");
 
-<<<<<<< HEAD
+
         comTableKonv.addActionListener(new java.awt.event.ActionListener() {
-=======
         comTableSatuan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         comTableSatuan.addActionListener(new java.awt.event.ActionListener() {
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comTableKonvActionPerformed(evt);
             }
         });
 
-<<<<<<< HEAD
-=======
         comTableLokasi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
         comTableLokasi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comTableLokasiActionPerformed(evt);
@@ -749,12 +736,9 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
         jPanel1.add(jLabel36, new org.netbeans.lib.awtextra.AbsoluteConstraints(705, 547, -1, -1));
 
         com_jenisKeuangan.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-<<<<<<< HEAD
         com_jenisKeuangan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "BCA | 1", "MANDIRI | 2", "BRI | 3", "CAT73 | 4", "TOKOCAT73 | 5" }));
         jPanel1.add(com_jenisKeuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(583, 545, 112, -1));
-=======
         com_jenisKeuangan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"BCA | 1", "MANDIRI | 2", "BRI | 3", "CAT73 | 4", "TOKOCAT73 | 5"}));
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel4.setText("Jenis Keuangan");
@@ -789,9 +773,7 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-<<<<<<< HEAD
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(541, 11, -1, -1));
-=======
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1016,7 +998,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
                                                 .addComponent(lbl_nmKasir)))
                                 .addContainerGap())
         );
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1031,7 +1012,9 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
 
         setSize(new java.awt.Dimension(1156, 682));
         setLocationRelativeTo(null);
-    }// </editor-fold>                        
+    }    
+    
+}// </editor-fold>                        
 
     private void txt_rekSupplyMouseClicked(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
@@ -1115,17 +1098,15 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
-<<<<<<< HEAD
     private void txt_dpKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_dpKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             dpnya();
         }
     }//GEN-LAST:event_txt_dpKeyPressed
-=======
+
     private void txt_dpKeyPressed(java.awt.event.KeyEvent evt) {
         // TODO add your handling code here:
     }
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
 
     private void comSupplierActionPerformed(java.awt.event.ActionEvent evt) {
         try {
@@ -1146,16 +1127,12 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
         }
     }
 
-<<<<<<< HEAD
-    private void comTableBarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comTableBarangActionPerformed
+    private void comTableBarangActionPerformed(java.awt.event.ActionEvent evt) {                                               
         int kode_barang = 0;
         int baris = tbl_Pembelian.getRowCount();
         TableModel tabelModel;
         tabelModel = tbl_Pembelian.getModel();
-=======
     private void comTableBarangActionPerformed(java.awt.event.ActionEvent evt) {
-
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
         try {
             String sql = "select * from barang where nama_barang = '" + comTableBarang.getSelectedItem() + "'";
             java.sql.Connection conn = (Connection) Koneksi.configDB();
@@ -1231,7 +1208,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
 //        txt_diskonRp.setText(nana);
     }
 
-<<<<<<< HEAD
     private void txt_dpKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_dpKeyReleased
 //  TableModel tabelModel;
 //            tabelModel = tbl_Pembelian.getModel();
@@ -1261,7 +1237,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
             int subtotal1 = 0, hargajadi1 = 0, diskonke21 = 0, totalqty = 0, total = 0, diskon = 0, diskonp1 = 0, diskonp11, diskonp21 = 0; //penjumlahan
             int jumlah = 0, harga = 0, subtotal = 0, diskonp = 0, diskonrp = 0, diskonp2 = 0, diskonrp2 = 0, hargajadi = 0;//panggil colom tabel
             int qty = 0;
-=======
     private void txt_dpKeyReleased(java.awt.event.KeyEvent evt) {
 
     }
@@ -1274,7 +1249,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
             float subtotal1 = 0, hargajadi1 = 0, diskonke21 = 0, totalqty = 0, total = 0, diskon = 0, diskonp1 = 0, diskonp11, diskonp21 = 0; //penjumlahan
             float jumlah = 0, harga = 0, subtotal = 0, diskonp = 0, diskonrp = 0, diskonp2 = 0, diskonrp2 = 0, hargajadi = 0;//panggil colom tabel
             float qty = 0;
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
             TableModel tabelModel;
             tabelModel = tbl_Pembelian.getModel();
             int i = 0;
@@ -1284,34 +1258,24 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
                 if (tabelModel.getValueAt(i, 8).toString().equals("")) {
                     diskonp = 0;
                 } else {
-<<<<<<< HEAD
                     diskonp = Integer.parseInt(tabelModel.getValueAt(i, 8).toString());
-=======
                     diskonp = Float.parseFloat(tabelModel.getValueAt(i, 8).toString());
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
                 }
                 if (tabelModel.getValueAt(i, 9).toString().equalsIgnoreCase("")) {
                     diskonrp = 0;
                 } else {
-<<<<<<< HEAD
                     diskonrp = Integer.parseInt(tabelModel.getValueAt(i, 9).toString());
-=======
                     diskonrp = Float.parseFloat(tabelModel.getValueAt(i, 9).toString());
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
                 }
                 if (tabelModel.getValueAt(i, 10).toString().equals("")) {
                     diskonp2 = 0;
                 } else {
-<<<<<<< HEAD
                     diskonp2 = Integer.parseInt(tabelModel.getValueAt(i, 10).toString());
-=======
                     diskonp2 = Float.parseFloat(tabelModel.getValueAt(i, 10).toString());
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
                 }
                 if (tabelModel.getValueAt(i, 11).toString().equals("")) {
                     diskonrp2 = 0;
                 } else {
-<<<<<<< HEAD
                     diskonrp2 = Integer.parseInt(tabelModel.getValueAt(i, 11).toString());
                 }
                 if (tabelModel.getValueAt(i, 5).toString().equals("")) {
@@ -1321,7 +1285,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
                 }
 //              
                 harga = Integer.parseInt(tabelModel.getValueAt(i, 6).toString());
-=======
                     diskonrp2 = Float.parseFloat(tabelModel.getValueAt(i, 11).toString());
                 }
                 if (tabelModel.getValueAt(i, 5).toString().equals("")) {
@@ -1331,7 +1294,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
                 }
 //              
                 harga = Float.parseFloat(tabelModel.getValueAt(i, 6).toString());
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
 
                 subtotal1 = jumlah * harga;
 
@@ -1340,15 +1302,12 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
                 diskon = ((diskonp + diskonp2) * subtotal1 / 100);
 
                 hargajadi1 = subtotal1 - diskon - diskonrp - diskonrp2;
-<<<<<<< HEAD
 
                 total += hargajadi1;
                 totalqty += jumlah;
-=======
                 System.out.println("diskonp : " + diskonp);
 //                total += hargajadi1;
 //                totalqty += jumlah;
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
             }
 
             model.setValueAt(rptabel(String.valueOf(subtotal1)), i - 1, 7);
@@ -1360,7 +1319,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
 //                   model.setValueAt(rptabelkembali(String.valueOf(diskonp)), i-1, 9); 
 //                   model.setValueAt(rptabelkembali(String.valueOf(diskonp2)), i-1, 11); 
 //            }
-<<<<<<< HEAD
             txt_tbl_total.setText(rptabel("" + total));
             txt_jumQty.setText(rptabel("" + totalqty));
 //                System.out.println("qty = " + totalqty);}
@@ -1378,7 +1336,7 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         hapussemuatabel();
     }//GEN-LAST:event_jButton1ActionPerformed
-=======
+
         }
 
 //                 txt_tbl_total.setText("" + total);
@@ -1387,7 +1345,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
         loadNumberTable();
 
     }
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
         hapussemuatabel();
@@ -1395,7 +1352,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
 
     private void txt_invActionPerformed(java.awt.event.ActionEvent evt) {
 
-<<<<<<< HEAD
     private void tbl_PembelianKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbl_PembelianKeyPressed
         DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {    // Membuat Perintah Saat Menekan Enter
@@ -1404,7 +1360,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
             int subtotal1 = 0, hargajadi1 = 0, diskonke21 = 0, totalqty = 0, total = 0, diskon = 0, diskonp1 = 0, diskonp11, diskonp21 = 0; //penjumlahan
             int jumlah = 0, harga = 0, subtotal = 0, diskonp = 0, diskonrp = 0, diskonp2 = 0, diskonrp2 = 0, hargajadi = 0;//panggil colom tabel
             int qty = 0;
-=======
     }
 
     private void tbl_PembelianKeyPressed(java.awt.event.KeyEvent evt) {
@@ -1415,7 +1370,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
             float subtotal1 = 0, hargajadi1 = 0, diskonke21 = 0, totalqty = 0, total = 0, diskon = 0, diskonp1 = 0, diskonp11, diskonp21 = 0; //penjumlahan
             float jumlah = 0, harga = 0, subtotal = 0, diskonp = 0, diskonrp = 0, diskonp2 = 0, diskonrp2 = 0, hargajadi = 0;//panggil colom tabel
             float qty = 0;
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
             TableModel tabelModel;
             tabelModel = tbl_Pembelian.getModel();
             int i = 0;
@@ -1425,53 +1379,38 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
                 if (tabelModel.getValueAt(i, 8).toString().equals("")) {
                     diskonp = 0;
                 } else {
-<<<<<<< HEAD
                     diskonp = Integer.parseInt(tabelModel.getValueAt(i, 8).toString());
-=======
                     diskonp = Float.parseFloat(tabelModel.getValueAt(i, 8).toString());
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
                 }
                 if (tabelModel.getValueAt(i, 9).toString().equalsIgnoreCase("")) {
                     diskonrp = 0;
                 } else {
-<<<<<<< HEAD
                     diskonrp = Integer.parseInt(tabelModel.getValueAt(i, 9).toString());
-=======
                     diskonrp = Float.parseFloat(tabelModel.getValueAt(i, 9).toString());
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
                 }
                 if (tabelModel.getValueAt(i, 10).toString().equals("")) {
                     diskonp2 = 0;
                 } else {
-<<<<<<< HEAD
                     diskonp2 = Integer.parseInt(tabelModel.getValueAt(i, 10).toString());
-=======
                     diskonp2 = Float.parseFloat(tabelModel.getValueAt(i, 10).toString());
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
                 }
                 if (tabelModel.getValueAt(i, 11).toString().equals("")) {
                     diskonrp2 = 0;
                 } else {
-<<<<<<< HEAD
                     diskonrp2 = Integer.parseInt(tabelModel.getValueAt(i, 11).toString());
-=======
                     diskonrp2 = Float.parseFloat(tabelModel.getValueAt(i, 11).toString());
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
                 }
                 if (tabelModel.getValueAt(i, 5).toString().equals("")) {
                     jumlah = 1;
                 } else {
-<<<<<<< HEAD
                     jumlah = Integer.parseInt(tabelModel.getValueAt(i, 5).toString());
                 }
 //              
                 harga = Math.round(Integer.parseInt(tabelModel.getValueAt(i, 6).toString()));
-=======
                     jumlah = Float.parseFloat(tabelModel.getValueAt(i, 5).toString());
                 }
 //              
                 harga = Float.parseFloat(tabelModel.getValueAt(i, 6).toString());
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
 
                 subtotal1 = jumlah * harga;
 
@@ -1481,13 +1420,10 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
 
                 hargajadi1 = subtotal1 - diskon - diskonrp - diskonrp2;
                 System.out.println("diskonp : " + diskonp);
-<<<<<<< HEAD
                 total += hargajadi1;
                 totalqty += jumlah;
-=======
 //                total += hargajadi1;
 //                totalqty += jumlah;
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
             }
 
             model.setValueAt(rptabel(String.valueOf(subtotal1)), i - 1, 7);
@@ -1499,27 +1435,22 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
 //                   model.setValueAt(rptabelkembali(String.valueOf(diskonp)), i-1, 9); 
 //                   model.setValueAt(rptabelkembali(String.valueOf(diskonp2)), i-1, 11); 
 //            }
-<<<<<<< HEAD
 
             txt_tbl_total.setText(rptabel("" + total));
             txt_jumQty.setText(rptabel("" + totalqty));
             model.addRow(new Object[]{});
             // dpnya();
-=======
             model.addRow(new Object[]{"", "", "", "", "", "", "", "", "", "", "", "", ""});
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
         }
 
 //             
 //            }
-<<<<<<< HEAD
 //                System.out.println("qty = " + totalqty);}
         loadNumberTable();
 
 //      
-
     }//GEN-LAST:event_tbl_PembelianKeyPressed
-=======
+
 //                 txt_tbl_total.setText("" + total);
 //                txt_jumQty.setText("" + totalqty);
 //                System.out.println("qty = " + totalqty);}
@@ -1527,7 +1458,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
 
 //     
     }
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
 
     private void txt_invKeyTyped(java.awt.event.KeyEvent evt) {
         char enter = evt.getKeyChar();
@@ -1543,7 +1473,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
         }
     }
 
-<<<<<<< HEAD
     private void txt_dpKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_dpKeyTyped
 
     }//GEN-LAST:event_txt_dpKeyTyped
@@ -1554,7 +1483,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
         TableModel tabelModel;
         tabelModel = tbl_Pembelian.getModel();
         int kode_barang = 0;
-=======
     private void txt_dpKeyTyped(java.awt.event.KeyEvent evt) {
         char enter = evt.getKeyChar();
         if (!(Character.isDigit(enter))) {
@@ -1563,7 +1491,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
     }
 
     private void comTableSatuanActionPerformed(java.awt.event.ActionEvent evt) {
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
         try {
             for (int i = 0; i < baris; i++) {
                 kode_barang = Integer.parseInt(tabelModel.getValueAt(i, 1).toString());
@@ -1591,7 +1518,7 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Eror" + e);
         }
-<<<<<<< HEAD
+
 //        String sql = "select * from barang_konversi where kode_barang ='" + kode_barang + "'";
 //            java.sql.Connection conn = (Connection) Koneksi.configDB();
 //            java.sql.Statement stm = conn.createStatement();
@@ -1607,9 +1534,8 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
 //                    System.out.println("0 " + Tempharga);                           
 
     }//GEN-LAST:event_comTableKonvActionPerformed
-=======
+
     }
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
 
     private void comTableLokasiActionPerformed(java.awt.event.ActionEvent evt) {
         try {
@@ -1811,13 +1737,12 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
     private javax.swing.JTextField txt_rekSupply;
     private javax.swing.JTextField txt_tbl_total;
     private javax.swing.JTextField txt_tgl;
-<<<<<<< HEAD
-    // End of variables declaration//GEN-END:variables
+
+    // End of variables declaration                   
 
     private String totalclone() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-=======
+
     // End of variables declaration                   
->>>>>>> 52d0c08bf844f2ad0947ba75782e9b60eeae4620
 }
