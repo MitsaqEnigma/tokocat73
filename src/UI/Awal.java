@@ -805,9 +805,9 @@ public class Awal extends javax.swing.JFrame {
     }//GEN-LAST:event_UbahProfilActionPerformed
 
     private void TransaksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TransaksiActionPerformed
-        Pembelian_Transaksi pt=new Pembelian_Transaksi();
-        pt.setVisible(true);
-        pt.setFocusable(true);
+//        Pembelian_Transaksi pt=new Pembelian_Transaksi();
+//        pt.setVisible(true);
+//        pt.setFocusable(true);
     }//GEN-LAST:event_TransaksiActionPerformed
 
     private void HutangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HutangActionPerformed
