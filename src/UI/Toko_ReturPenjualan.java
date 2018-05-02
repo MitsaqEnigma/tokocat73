@@ -9,6 +9,7 @@ import Java.Connect;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import static java.lang.Thread.sleep;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Calendar;
@@ -26,19 +27,20 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Toko_ReturPenjualan extends javax.swing.JFrame {
 
-    private HashMap konversi, idReturn, jmlBarang;
+    private HashMap konversi, idReturn, jmlBarang, hashCode;
     private DefaultTableModel tabelBarang, tabelRetur;
     private ResultSet hasil;
     public Statement stmt;
     private Connect connection;
     private String code_barang, code_konversi;
     private String noNota = "";
+    private PreparedStatement PS;
     
     public Toko_ReturPenjualan() {
         initComponents();
         this.setLocationRelativeTo(null);
         connection = new Connect();
-        konversi = new HashMap(); idReturn = new HashMap(); jmlBarang = new HashMap();
+        konversi = new HashMap(); idReturn = new HashMap(); jmlBarang = new HashMap(); hashCode = new HashMap();
         tabelBarang = new DefaultTableModel(new String[]{"No.","Kode","Nama Barang"},0);
         jTable2.setModel(tabelBarang);
         jTable2.getColumnModel().getColumn(0).setPreferredWidth(5);
@@ -145,8 +147,8 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         String lastNo = "";
         try{    
             String data = "SELECT no_faktur_toko_penjualan_return "
-                    + "FROM toko_penjualan_detail_return "
-                    + "ORDER BY id_toko_penjualan_return_detail DESC LIMIT 1";
+                    + "FROM toko_penjualan_return "
+                    + "ORDER BY id_toko_penjualan_return DESC LIMIT 1";
             hasil = connection.ambilData(data);
                 if(hasil.next()){
                     String nomor = hasil.getString("no_faktur_toko_penjualan_return");
@@ -254,25 +256,111 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         }
     }
     
-    private void simpanTokoDetailReturn(String codeBarang){
-//        int total = Integer.parseInt(vJumlah.getText()) * Integer.parseInt(vHarga.getText());
-        
-//                vdatetime.setText(dt.format(d));
+    private String noFakturTPReturn(){
+        String year = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
+        String no = "RJ"+year.substring(year.length()-2)+"-"+selectLastDataDetailReturn();
+        return no;
+    }
+    
+    private void simpanTokoDetailReturn(String noReturn){
+        PS = null;
+        String kode_pegawai = "1";
+        java.util.Date d = new java.util.Date();
+        java.text.SimpleDateFormat dt = new java.text.SimpleDateFormat ("yyyy-MM-dd hh:mm:ss");
+        String date = dt.format(d);
         
         try{
-            String year = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
-            String no = "RT"+year.substring(year.length()-2)+"-"+selectLastDataDetailReturn();
-            String kode_pegawai = "1";
-            java.util.Date d = new java.util.Date();
-            java.text.SimpleDateFormat dt = new java.text.SimpleDateFormat ("yyyy-MM-dd hh:mm:ss");
-            String date = dt.format(d);
-            String data = "INSERT INTO toko_penjualan_return(no_faktur_toko_penjualan_return, tgl_toko_penjualan_return, kode_pegawai) "
-                    + "VALUES ('"+no+"', '"+date+"', '"+kode_pegawai+"')";
-            connection.simpanData(data);
-            dPilihBarang.dispose();
+            String data = "INSERT INTO toko_penjualan_return(no_faktur_toko_penjualan_return, "
+                    + "tgl_toko_penjualan_return, kode_pegawai) "
+                    + "VALUES (?, ?, ?)";
+            PS = connection.Connect().prepareStatement(data);
+            PS.setString(1, noReturn);
+            PS.setString(2, date);
+            PS.setString(3, kode_pegawai);
+            PS.executeUpdate();
+            simpanTokoPenjualanDetailReturn(noReturn);
         } catch(Exception e){
             System.out.println("Toko_Retur/inputTokoDetailReturn - "+e);
         }
+    }
+    
+    private void simpanTokoPenjualanDetailReturn(String noReturn){
+        PS = null;
+        int i = jTable3.getRowCount();
+        try{
+            for(int j = 0; j < i; j++){
+                String namaB = jTable3.getValueAt(j, 1).toString();
+                String kodeB = selectNoBarang(namaB);
+                String namaS = jTable3.getValueAt(j, 2).toString();
+                String kodeS = selectKodeKonversi(namaS);
+                String data2 = "INSERT INTO toko_penjualan_detail_return"
+                        + "(no_faktur_toko_penjualan_return, kode_barang, "
+                        + "jumlah_barang, harga_barang, kode_barang_konversi) "
+                        + "VALUES (?, ?, ?, ?, ?)";
+                PS = connection.Connect().prepareStatement(data2);
+                PS.setString(1, noReturn);
+                PS.setString(2, kodeB);
+                PS.setString(3, jTable3.getValueAt(j, 3).toString());
+                PS.setString(4, jTable3.getValueAt(j, 5).toString());
+                PS.setString(5, kodeS);
+                PS.executeUpdate();
+            }
+            JOptionPane.showMessageDialog(null, "Return Berhasil Disimpan");
+            deleteTabel(tabelRetur);
+            vTotalHarga.setText("0");
+            vNota.setText("Nomor Nota");
+            vNota.setEditable(true);
+            vOk.setText("OK");
+            deleteKeranjangReturn();
+            
+        } catch(Exception e){
+            System.out.println("Toko_Retur/simpanTokoPenjualanDetailReturn - "+e);
+        }
+    }
+    
+    private void deleteKeranjangReturn(){
+        try{
+            String data = "DELETE FROM toko_keranjang_return";
+            connection.simpanData(data);
+        } catch(Exception e){
+            System.out.println("Toko_Retur/deleteKeranjangReturn - "+e);
+        }
+    }
+    
+    private String selectNoBarang(String namaB){
+        String noB = "";
+        try{
+            String data = "SELECT proud_code "
+                    + "FROM barang "
+                    + "WHERE nama_barang = ?";
+            PS = connection.Connect().prepareStatement(data);
+            PS.setString(1, namaB);
+            hasil = PS.executeQuery();
+            while(hasil.next()){
+                noB = hasil.getString("proud_code");
+            }
+        } catch(Exception e){
+            System.out.println("Toko_Retur/selectNoBarang - "+e);
+        }
+        return noB;
+    }
+    
+    private String selectKodeKonversi(String namaK){
+        String noK = "";
+        try{
+            String data = "SELECT kode_konversi "
+                    + "FROM konversi "
+                    + "WHERE nama_konversi = ?";
+            PS = connection.Connect().prepareStatement(data);
+            PS.setString(1, namaK);
+            hasil = PS.executeQuery();
+            while(hasil.next()){
+                noK = hasil.getString("kode_konversi");
+            }
+        } catch(Exception e){
+            System.out.println("Toko_Retur/selectNoBarang - "+e);
+        }
+        return noK;
     }
     
     private void hapusBarang(String kode){
@@ -604,9 +692,9 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable3MouseClicked(evt);
+        jTable3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTable3KeyReleased(evt);
             }
         });
         jScrollPane3.setViewportView(jTable3);
@@ -653,6 +741,11 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 vNotaFocusLost(evt);
+            }
+        });
+        vNota.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                vNotaKeyReleased(evt);
             }
         });
 
@@ -773,13 +866,9 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnTambahBarangReturActionPerformed
 
-    private void jTable3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable3MouseClicked
-        
-    }//GEN-LAST:event_jTable3MouseClicked
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int row = jTable3.getSelectedRow();
-        if(row <= -1){
+        if(row < 0){
             JOptionPane.showMessageDialog(null, "Silahkan Pilih Barang yg akan dihapus");
         } else{
             row = row +1;
@@ -788,7 +877,11 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnSimpanPenjualan1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanPenjualan1ActionPerformed
-        
+        if(jTable3.getRowCount() == 0){
+            JOptionPane.showMessageDialog(null, "Tidak ada Barang yang Return");
+        } else{
+            simpanTokoDetailReturn(noFakturTPReturn());
+        }
     }//GEN-LAST:event_btnSimpanPenjualan1ActionPerformed
 
     private void vNotaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_vNotaFocusGained
@@ -827,6 +920,33 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         isiTabelReturn(vSearchRetur.getText());
     }//GEN-LAST:event_vSearchReturKeyReleased
 
+    private void vNotaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_vNotaKeyReleased
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            String nomor_nota = vNota.getText();
+            if(nomor_nota.equals("Nomor Nota")){
+                JOptionPane.showMessageDialog(null, "Silahkan isi Nomor Nota");
+            } else{
+                noNota = selectNoNota(nomor_nota);
+                if(!noNota.equalsIgnoreCase("")){
+                    vNota.setEditable(false);
+                    vOk.setText("Edit");
+                }
+            }
+        }
+    }//GEN-LAST:event_vNotaKeyReleased
+
+    private void jTable3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable3KeyReleased
+        if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
+            int row = jTable3.getSelectedRow();
+            if(row < 0){
+                JOptionPane.showMessageDialog(null, "Silahkan Pilih Barang yg akan dihapus");
+            } else{
+                row = row +1;
+                hapusBarang(idReturn.get(row).toString());
+            }
+        }
+    }//GEN-LAST:event_jTable3KeyReleased
+
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt){
         if(code_barang != null && (!vJumlah.getText().equalsIgnoreCase("")) && 
                 !vTotalHarga.getText().equalsIgnoreCase("")){
@@ -834,6 +954,8 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
             int jml = Integer.parseInt(vJumlah.getText());
             if(jml <= jumlahStok && jml > 0){
                 inputTokoKeranjangReturn(code_barang);
+                hashCode.put(vNamaBarang.getText(), code_barang);
+                konversi.put(vSatuan.getSelectedItem(), code_konversi);
                 vNamaBarang.setText(""); vSatuan.removeAllItems(); vJumlah.setText("0"); 
                 vHarga.setText(""); vTotalHarga.setText(""); code_barang = null; 
                 deleteTabel(tabelRetur);
