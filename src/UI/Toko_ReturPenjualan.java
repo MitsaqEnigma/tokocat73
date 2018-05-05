@@ -121,7 +121,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     
     private void isiPilihBarang(String kode){
         try{
-            String data = "SELECT TPD.kode_barang, B.nama_barang, B.harga_jual_3_barang, TPD.kode_barang_konversi, K.nama_konversi "
+            String data = "SELECT TPD.kode_barang, B.nama_barang, B.harga_jual_2_barang, TPD.kode_barang_konversi, K.nama_konversi "
                     + "FROM barang B, toko_penjualan_detail TPD, konversi K "
                     + "WHERE B.proud_code = TPD.kode_barang AND TPD.kode_barang_konversi = K.kode_konversi AND "
                     + "TPD.kode_barang = '"+kode+"' ";
@@ -130,7 +130,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
 //                String kode_barang = hasil.getString("kode_barang");
                 code_konversi = hasil.getString("kode_barang_konversi");
                 vNamaBarang.setText(hasil.getString("nama_barang"));
-                vHarga.setText(hasil.getString("harga_jual_3_barang"));
+                vHarga.setText(String.valueOf(Math.round(hasil.getInt("harga_jual_2_barang"))));
                 jLabel8.setText("*Jumlah Maksimal Return : "+jmlBarang.get(kode));
                 code_barang = hasil.getString("kode_barang");
                 vSatuan.removeAllItems();
@@ -143,7 +143,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
         }
     }
     
-    private String selectLastDataDetailReturn(){
+    private String selectLastDataDetailReturn(String year){
         String lastNo = "";
         try{    
             String data = "SELECT no_faktur_toko_penjualan_return "
@@ -152,17 +152,22 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
             hasil = connection.ambilData(data);
                 if(hasil.next()){
                     String nomor = hasil.getString("no_faktur_toko_penjualan_return");
-                    int noLama = Integer.parseInt(nomor.substring(nomor.length() - 4));
-                    noLama++;
-                    String no = Integer.toString(noLama);
-                    if(no.length() == 1){
-                        no = "000"+no;
-                    } else if(no.length() == 2){
-                        no = "00"+no;
-                    } else if(no.length() == 3){
-                        no = "0"+no;
+                    if(nomor.substring(2, 4).equalsIgnoreCase(year)){
+                        int noLama = Integer.parseInt(nomor.substring(nomor.length() - 4));
+                        noLama++;
+                        String no = Integer.toString(noLama);
+                        if(no.length() == 1){
+                            no = "000"+no;
+                        } else if(no.length() == 2){
+                            no = "00"+no;
+                        } else if(no.length() == 3){
+                            no = "0"+no;
+                        }
+                        lastNo = no;
+                    } else{
+                        lastNo = "0001";
                     }
-                    lastNo = no;
+                    
                 } else{
                     lastNo = "0001";
                 }
@@ -193,12 +198,12 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     private void isiTabelReturn(String search){
         ResultSet nama_barang, harga_barang;
         try{
-            String data = "SELECT TKR.id_toko_keranjang, B.nama_barang, K.nama_konversi, TKR.jumlah_barang, B.harga_jual_3_barang, TKR.harga_barang "
+            String data = "SELECT TKR.id_toko_keranjang, B.nama_barang, K.nama_konversi, TKR.jumlah_barang, B.harga_jual_2_barang, TKR.harga_barang "
                     + "FROM barang B, konversi K, toko_keranjang_return TKR "
                     + "WHERE TKR.kode_barang = B.proud_code AND TKR.kode_barang_konversi = K.kode_konversi "
                     + (search.equalsIgnoreCase("*") ? "" : "AND B.nama_barang LIKE '%"+search+"%' ")+" "
                     + "ORDER BY TKR.id_toko_keranjang";
-//            String data = "SELECT DT.id_toko_penjualan_return_detail, B.nama_barang, K.nama_konversi, DT.jumlah_barang, B.harga_jual_3_barang, DT.harga_barang "
+//            String data = "SELECT DT.id_toko_penjualan_return_detail, B.nama_barang, K.nama_konversi, DT.jumlah_barang, B.harga_jual_2_barang, DT.harga_barang "
 //                    + "FROM toko_penjualan_detail_return DT, barang B, konversi K "
 //                    + "WHERE DT.kode_barang = proud_code AND DT.kode_barang_konversi = K.kode_konversi "
 //                    + (search.equalsIgnoreCase("*") ? "" : "AND B.nama_barang LIKE '%"+search+"%' ")+" "
@@ -217,7 +222,7 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
                 String barang = hasil.getString("nama_barang");
                 String satuan = hasil.getString("nama_konversi");
                 String jumlah = hasil.getString("jumlah_barang");
-                String harga = hasil.getString("harga_jual_3_barang");
+                String harga = String.valueOf(Math.round(hasil.getInt("harga_jual_2_barang")));
                 String total = hasil.getString("harga_barang");
                 tabelRetur.addRow(new Object[]{no,barang,satuan,jumlah,harga,total});
                 idReturn.put(no,hasil.getString("id_toko_keranjang"));
@@ -258,7 +263,8 @@ public class Toko_ReturPenjualan extends javax.swing.JFrame {
     
     private String noFakturTPReturn(){
         String year = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
-        String no = "RJ"+year.substring(year.length()-2)+"-"+selectLastDataDetailReturn();
+        String lastY = year.substring(year.length()-2);
+        String no = "RJ"+ lastY +"-"+selectLastDataDetailReturn(lastY);
         return no;
     }
     

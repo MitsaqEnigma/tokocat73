@@ -1,36 +1,188 @@
 package UI;
 
+import Java.Connect;
+import Java.ListTokoLaporanToko;
+import com.toedter.calendar.JDateChooser;
+import java.beans.PropertyChangeListener;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.TimerTask;
-import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
-/**
- *
- * @author Dii
- */
-public class Toko_Laporan extends javax.swing.JFrame {
+class arraysort implements Comparator<ListTokoLaporanToko> {
+
+    @Override
+    public int compare(ListTokoLaporanToko a, ListTokoLaporanToko b) {
+        return b.getTglsort() - a.getTglsort();
+    }
+}
+
+public class Toko_Laporan extends javax.swing.JDialog {
+
+    private SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat dt2 = new SimpleDateFormat("dd-MM-yyyy");
     private DefaultTableModel laporanPenjualan, laporanReturn;
-    
-    
+    private ResultSet hasil;
+    private Connect connection;
+    private PreparedStatement PS;
+    private String tgl0, tgl1, tgl2;
+//    
+    ArrayList<ListTokoLaporanToko> list;
+    ListTokoLaporanToko laporanToko;
+
     public Toko_Laporan() {
+//        super(parent, modal);
+        initComponents();
+//        this.setLocationRelativeTo(null);
+//        laporanPenjualan = new DefaultTableModel(new String[]{"No.", "Kode", "Nama", "Qty", "Satuan", "Harga Jual",
+//            "HPP", "Total Jual", "Total HPP", "LabaRugi", "%"}, 0);
+//        jTable1.setModel(laporanPenjualan);
+//        jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
+//
+////        
+//        list = new ArrayList<>();
+//        getData();
+
+    }
+
+    public Toko_Laporan(java.awt.Frame parent, boolean modal, Connect connection) {
+        super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
-        laporanPenjualan = new DefaultTableModel(new String[]{"No.","Kode","Nama","Qty","Satuan","Harga Jual",
-            "HPP","Total Jual","Total HPP","LabaRugi","%"},0);
+//        laporanPenjualan = new DefaultTableModel(new String[]{"No.", "Kode", "Nama", "Qty", "Satuan", "Harga Jual", "HPP", "Total Jual", "Total HPP", "LabaRugi", "%"}, 0);
+//        jTable1.setModel(laporanPenjualan);
+//        jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
+        
+//        
+        this.connection = connection;
+//        list = new ArrayList<>();
+        tgl0 = getCurrentDate();
+        getData(true, tgl0, tgl0);
+        jLabel3.setText(getCurrentDate2());
+        
+        
+        
+    }
+    //tanggal dengan format yyyy-MM-dd (untuk database)
+    private String getCurrentDate() {
+        String date = "";
+        java.util.Date d = new java.util.Date();
+        date = dt.format(d);
+        return date;
+    }
+    //tanggal dengan format dd-MM-yyyy
+    private String getCurrentDate2(){
+        String date2 = "";
+        java.util.Date d = new java.util.Date();
+        date2 = dt2.format(d);
+        return date2;
+    }
+
+    private void getData(boolean currentDate, String tgl1, String tgl2) {
+        list = new ArrayList<>();
+        try {
+            laporanPenjualan = new DefaultTableModel(new String[]{"No.", "Kode", "Nama", "Qty", "Satuan", "Harga Jual", "HPP", "Total Jual", "Total HPP", "LabaRugi", "%"}, 0);
+//            penjualan
+            String sql = "SELECT PD.no_faktur_toko_penjualan, B.nama_barang, P.tgl_toko_penjualan, PD.jumlah_barang, K.nama_konversi, B.harga_jual_2_barang, PD.harga_barang "
+                    + "FROM toko_penjualan_detail PD, barang B, konversi K, toko_penjualan P "
+                    + "WHERE PD.kode_barang = B.proud_code AND PD.kode_barang_konversi = K.kode_konversi AND "
+                    + "P.no_faktur_toko_penjualan = PD.no_faktur_toko_penjualan AND "
+                    + (currentDate == true ? "P.tgl_toko_penjualan = '"+tgl1+"' " : 
+                    "P.tgl_toko_penjualan BETWEEN '"+tgl1+"' AND '"+tgl2+"' ")+" ";
+//            System.out.println(sql);
+            hasil = connection.ambilData(sql);
+            setData(hasil);
+//            return
+            sql = "SELECT PDR.no_faktur_toko_penjualan_return, B.nama_barang, PR.tgl_toko_penjualan_return,"
+                    + "PDR.jumlah_barang, K.nama_konversi, B.harga_jual_2_barang, PDR.harga_barang "
+                    + "FROM toko_penjualan_detail_return PDR, barang B, konversi K, toko_penjualan_return PR "
+                    + "WHERE PDR.kode_barang = B.proud_code AND PDR.kode_barang_konversi = K.kode_konversi "
+                    + "AND PR.no_faktur_toko_penjualan_return = PDR.no_faktur_toko_penjualan_return AND "
+                    + (currentDate == true ? "PR.tgl_toko_penjualan_return = '"+tgl1+"' "  :
+                    "PR.tgl_toko_penjualan_return BETWEEN '" + tgl1 + "' AND '" + tgl2 + "' ")+" ";
+//            System.out.println(sql);
+            hasil = connection.ambilData(sql);
+            setData(hasil);
+        } catch (Exception e) {
+            System.out.println(e.toString() + "_line_62");
+        } finally {
+            showData();
+        }
+    }
+
+    private void setData(ResultSet hasil) {
+        try {
+            while (hasil.next()) {
+                laporanToko = new ListTokoLaporanToko();
+                laporanToko.setNo_faktur(hasil.getString(1));
+                laporanToko.setNamabarang(hasil.getString(2));
+                laporanToko.setTanggal(hasil.getString(3));
+                laporanToko.setTgl(hasil.getDate(3));
+                laporanToko.setJumlah(hasil.getInt(4));
+                laporanToko.setNamakonversi(hasil.getString(5));
+                laporanToko.setHargajual(hasil.getInt(6));
+                laporanToko.setTotaljual(hasil.getInt(7));
+                list.add(laporanToko);
+                laporanToko = null;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        }
+    }
+
+    private void showData() {
+        int no = 0;
+        
+//        for (int i = 0; i < list.size(); i++) {
+//            laporanToko = list.get(i);
+//            laporanPenjualan.addRow(new Object[]{
+//                laporanToko.getNo_faktur(),
+//                laporanToko.getNamabarang(),
+//                laporanToko.getTanggal()
+//            });
+//        }
+//        sort here
+        Collections.sort(list, new arraysort());
+        for (int i = 0; i < list.size(); i++) {
+            laporanToko = list.get(i);
+            laporanPenjualan.addRow(new Object[]{
+                ++no,
+                laporanToko.getNo_faktur(),
+                laporanToko.getNamabarang(),
+                laporanToko.getJumlah(),
+                laporanToko.getNamakonversi(),
+                laporanToko.getHargajual(),
+                0,
+                laporanToko.getTotaljual(),
+                0,
+                0,
+                0
+//                laporanToko.getTanggal()
+            });
+        }
         jTable1.setModel(laporanPenjualan);
         jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
     }
     
-    
-    private Boolean compareDate(){
+    private void deleteTabel(){
+        int baris = laporanPenjualan.getRowCount();
+        for (int i = 0; i < baris; i++) {
+            laporanPenjualan.removeRow(0);
+        }
+    }
+
+    private Boolean compareDate() {
         boolean kembali = false;
-        try{
+        try {
 //            String sDate1 = jDateChooser1.getDateFormatString();
 //            Date date1 = new SimpleDateFormat("dd-MM-yyyy").parse(sDate1);
-        } catch(Exception e){
-            System.out.println("Toko_Laporan/btnTampilkanLapJual - "+e);
+        } catch (Exception e) {
+            System.out.println("Toko_Laporan/btnTampilkanLapJual - " + e);
         }
         return kembali;
     }
@@ -62,10 +214,20 @@ public class Toko_Laporan extends javax.swing.JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         jCheckBox1.setText("Tanggal");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("s.d");
 
         jButton1.setText("Print");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jPanel2.setBackground(new java.awt.Color(51, 51, 51));
 
@@ -75,7 +237,7 @@ public class Toko_Laporan extends javax.swing.JFrame {
         jLabel2.setText("Detail Laba Rugi");
 
         jLabel3.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
-        jLabel3.setText("Tanggal s.d Tanggal");
+        jLabel3.setText("Tanggal s/d Tanggal");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -142,6 +304,20 @@ public class Toko_Laporan extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jDateChooser1.setDateFormatString("dd-MM-yyyy");
+        jDateChooser1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jDateChooser1PropertyChange(evt);
+            }
+        });
+
+        jDateChooser2.setDateFormatString("dd-MM-yyyy");
+        jDateChooser2.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jDateChooser2PropertyChange(evt);
+            }
+        });
+
         jLabel4.setText("Kriteria");
 
         jButton2.setText("Print Faktur");
@@ -194,6 +370,47 @@ public class Toko_Laporan extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jDateChooser1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooser1PropertyChange
+        if (jCheckBox1.isSelected()) {
+            if (jDateChooser1.getDate() != null && jDateChooser2.getDate() != null) {
+                String tanggal1 = dt.format(jDateChooser1.getDate());
+                String tanggal2 = dt.format(jDateChooser2.getDate());
+                getData(false, tanggal1, tanggal2);
+                jLabel3.setText(dt2.format(jDateChooser1.getDate()) + " s/d " + dt2.format(jDateChooser2.getDate()));
+            }
+        }
+    }//GEN-LAST:event_jDateChooser1PropertyChange
+
+    private void jDateChooser2PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooser2PropertyChange
+        if (jCheckBox1.isSelected()) {
+            if (jDateChooser1.getDate() != null && jDateChooser2.getDate() != null) {
+                String tanggal1 = dt.format(jDateChooser1.getDate());
+                String tanggal2 = dt.format(jDateChooser2.getDate());
+                getData(false, tanggal1, tanggal2);
+                jLabel3.setText(dt2.format(jDateChooser1.getDate()) + " s/d " + dt2.format(jDateChooser2.getDate()));
+            }
+        }
+    }//GEN-LAST:event_jDateChooser2PropertyChange
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        if(!jCheckBox1.isSelected()){
+            tgl0 = getCurrentDate();
+            getData(true, tgl0, tgl0);
+            jLabel3.setText(getCurrentDate2());
+        } else{
+            if (jDateChooser1.getDate() != null && jDateChooser2.getDate() != null) {
+                tgl1 = dt.format(jDateChooser1.getDate());
+                tgl2 = dt.format(jDateChooser2.getDate());
+                getData(false, tgl1, tgl2);
+                jLabel3.setText(dt2.format(jDateChooser1.getDate()) + " s/d " + dt2.format(jDateChooser2.getDate()));
+            }
+        }
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -219,132 +436,6 @@ public class Toko_Laporan extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Toko_Laporan.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 

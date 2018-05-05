@@ -966,7 +966,7 @@ public class Awal extends javax.swing.JFrame {
     }//GEN-LAST:event_BarangActionPerformed
 
     private void TransaksiiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TransaksiiActionPerformed
-        Toko_Transaksi x = new Toko_Transaksi(this, rootPaneCheckingEnabled, connection);
+        Toko_Transaksi2 x = new Toko_Transaksi2();
         x.setLocationRelativeTo(this);
         x.setVisible(true);
     }//GEN-LAST:event_TransaksiiActionPerformed
@@ -978,9 +978,9 @@ public class Awal extends javax.swing.JFrame {
     }//GEN-LAST:event_ReturTransaksiActionPerformed
 
     private void LaporanTokoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LaporanTokoActionPerformed
-        Toko_Laporan x = new Toko_Laporan();
+        Toko_Laporan x = new Toko_Laporan(this, rootPaneCheckingEnabled, connection);
+        x.setLocationRelativeTo(this);
         x.setVisible(true);
-        x.setFocusable(true);
     }//GEN-LAST:event_LaporanTokoActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
