@@ -428,6 +428,11 @@ public class Toko_Transaksi2 extends javax.swing.JDialog implements KeyListener 
         });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
         addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 formKeyPressed(evt);
@@ -1300,9 +1305,12 @@ public class Toko_Transaksi2 extends javax.swing.JDialog implements KeyListener 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_F12) {
             System.out.println("F12");
-
         }
     }//GEN-LAST:event_formKeyPressed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        
+    }//GEN-LAST:event_formWindowOpened
     private void jTextField3KeyReleased(java.awt.event.KeyEvent evt) {
         jTextField4.setText(String.valueOf(Integer.parseInt(jTextField3.getText().toString()) - Integer.parseInt(jTextField2.getText().toString())));
 

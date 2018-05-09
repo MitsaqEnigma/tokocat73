@@ -92,18 +92,18 @@ public class Toko_Laporan extends javax.swing.JDialog {
                     + "FROM toko_penjualan_detail PD, barang B, konversi K, toko_penjualan P "
                     + "WHERE PD.kode_barang = B.proud_code AND PD.kode_barang_konversi = K.kode_konversi AND "
                     + "P.no_faktur_toko_penjualan = PD.no_faktur_toko_penjualan AND "
-                    + (currentDate == true ? "P.tgl_toko_penjualan = '"+tgl1+"' " : 
+                    + (currentDate == true ? "CAST(P.tgl_toko_penjualan as date) = '"+tgl1+"' " : 
                     "P.tgl_toko_penjualan BETWEEN '"+tgl1+"' AND '"+tgl2+"' ")+" ";
 //            System.out.println(sql);
             hasil = connection.ambilData(sql);
             setData(hasil);
 //            return
-            sql = "SELECT PDR.no_faktur_toko_penjualan_return, B.nama_barang, PR.tgl_toko_penjualan_return,"
+            sql = "SELECT PDR.no_faktur_toko_penjualan_return, B.nama_barang, PR.tgl_toko_penjualan_return, "
                     + "PDR.jumlah_barang, K.nama_konversi, B.harga_jual_2_barang, PDR.harga_barang "
                     + "FROM toko_penjualan_detail_return PDR, barang B, konversi K, toko_penjualan_return PR "
                     + "WHERE PDR.kode_barang = B.proud_code AND PDR.kode_barang_konversi = K.kode_konversi "
                     + "AND PR.no_faktur_toko_penjualan_return = PDR.no_faktur_toko_penjualan_return AND "
-                    + (currentDate == true ? "PR.tgl_toko_penjualan_return = '"+tgl1+"' "  :
+                    + (currentDate == true ? "CAST(PR.tgl_toko_penjualan_return as date) = '"+tgl1+"' " :
                     "PR.tgl_toko_penjualan_return BETWEEN '" + tgl1 + "' AND '" + tgl2 + "' ")+" ";
 //            System.out.println(sql);
             hasil = connection.ambilData(sql);
